@@ -1,0 +1,23 @@
+_notes.txt
+
+# --
+
+frame/index.html
+!!@ Failes
+<iframe width="575" height="1100" src="https://poets.org/poem/let-america-be-america-again/embed" frameborder="0" scrolling="yes" allowfullscreen></iframe>
+
+# --
+2025-02-13 12:31:04
+
+https://apps.apple.com/us/app/sitesucker/id442168834?mt=12
+https://ricks-apps.com/osx/sitesucker/index.html
+
+used sitesucker on
+https://poets.org/poem/let-america-be-america-again
+trying to download some 8k+ files !!
+stop
+examine in browser to see needed dependencies
+site-sucker/cdn-cgi
+site-sucker/sites
+site-sucker/themes
+
