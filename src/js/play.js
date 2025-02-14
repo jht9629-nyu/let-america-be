@@ -1,28 +1,60 @@
 //
+function play_from_top_toggle() {
+  if (my.full_read_enabled) {
+    play_from_top_short();
+  } else {
+    play_from_top_long();
+  }
+}
+
+function play_from_top_short() {
+  console.log('play_from_top_short ', my.full_read_enabled);
+  play_from_top(my.scrollYTopShort);
+  my.full_read_enabled = 0;
+}
+
+function play_from_top_long() {
+  console.log('play_from_top_long ', my.full_read_enabled);
+  play_from_top(my.scrollYTopLong);
+  my.full_read_enabled = 1;
+}
+
+function play_from_top(ytop) {
+  // gc();
+  my.topRunCount++;
+  console.log('my.topRunCount', my.topRunCount);
+  window.scrollTo(0, ytop);
+  start_scroll_pause();
+  my.elineIndex = 0;
+  my.elineDelayCount = 0;
+  my.overlayColorsIndex = (my.overlayColorsIndex + 1) % my.overlayColors.length;
+  send_current_line();
+}
 
 // Advance to the next line
 function advance_next_line() {
   delta_next_line(1);
 }
 
-function line_next() {
-  delta_next_line(1);
-  my.scrollEnabled = 0;
-  my.focusEnabled = 1;
-}
-globalThis.line_next = line_next;
+// !!@ Not used: my.focusEnabled
 
-function line_previous() {
-  delta_next_line(-1);
-  my.scrollEnabled = 0;
-  my.focusEnabled = 1;
-}
+// function line_next() {
+//   delta_next_line(1);
+//   my.scrollEnabled = 0;
+//   my.focusEnabled = 1;
+// }
 
-function line_continue() {
-  my.scrollEnabled = 1;
-  my.focusEnabled = 0;
-  my.elineDelayCount = 0;
-}
+// function line_previous() {
+//   delta_next_line(-1);
+//   my.scrollEnabled = 0;
+//   my.focusEnabled = 1;
+// }
+
+// function line_continue() {
+//   my.scrollEnabled = 1;
+//   my.focusEnabled = 0;
+//   my.elineDelayCount = 0;
+// }
 
 function focus_line() {
   let el = my.elines[my.elineIndex];
@@ -81,36 +113,4 @@ function send_current_line() {
 function send_lineInfo(lineInfo) {
   // console.log('send_lineInfo lineInfo', lineInfo);
   // ipcRenderer.send('set-line-info', lineInfo);
-}
-
-function play_from_top_toggle() {
-  if (my.full_read_enabled) {
-    play_from_top_short();
-  } else {
-    play_from_top_long();
-  }
-}
-
-function play_from_top_short() {
-  console.log('play_from_top_short ', my.full_read_enabled);
-  play_from_top(my.scrollYTopShort);
-  my.full_read_enabled = 0;
-}
-
-function play_from_top_long() {
-  console.log('play_from_top_long ', my.full_read_enabled);
-  play_from_top(my.scrollYTopLong);
-  my.full_read_enabled = 1;
-}
-
-function play_from_top(ytop) {
-  // gc();
-  my.topRunCount++;
-  console.log('my.topRunCount', my.topRunCount);
-  window.scrollTo(0, ytop);
-  start_scroll_pause();
-  my.elineIndex = 0;
-  my.elineDelayCount = 0;
-  my.overlayColorsIndex = (my.overlayColorsIndex + 1) % my.overlayColors.length;
-  send_current_line();
 }
