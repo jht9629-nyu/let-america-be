@@ -76,6 +76,13 @@ function setup_scroll() {
   });
   my.navbar_div = nv;
 
+  let nls = document.querySelectorAll('.nav-link');
+  for (let index = 0; index < nls.length; index++) {
+    let ent = nls[index];
+    console.log(index, ent.href);
+    ent.remove();
+  }
+
   let ff = document.querySelector('.field .field--field_image');
   ff.addEventListener('mouseup', function (event) {
     console.log('ff mouseup clientX', event.clientX, 'clientY', event.clientY);
