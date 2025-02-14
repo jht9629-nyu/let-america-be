@@ -58,9 +58,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 window.addEventListener('mouseup', function (event) {
   // console.log('mouseup clientX', event.clientX, 'clientY', event.clientY);
-  let zoomFactor = webFrame_getZoomFactor();
+  // let zoomFactor = webFrame_getZoomFactor();
   console.log('mouseup window.scrollY', window.scrollY, 'my.scrollEnabled', my.scrollEnabled);
-  console.log('zoomFactor', zoomFactor);
+  // console.log('zoomFactor', zoomFactor);
   my.scrollEnabled = !my.scrollEnabled;
 });
 
@@ -69,11 +69,24 @@ function setup_scroll() {
   console.log('setup_scroll my', my);
   console.log('setup_scroll window.location.href', window.location.href);
 
+  let nv = document.querySelector('.navbar');
+  nv.addEventListener('mouseup', function (event) {
+    console.log('nv mouseup clientX', event.clientX, 'clientY', event.clientY);
+    play_from_top_toggle();
+  });
+  my.navbar_div = nv;
+
   let ff = document.querySelector('.field .field--field_image');
   ff.addEventListener('mouseup', function (event) {
     console.log('ff mouseup clientX', event.clientX, 'clientY', event.clientY);
     // play_from_top_long();
     play_from_top_short();
+  });
+
+  let pt = document.querySelector('.poem__title');
+  pt.addEventListener('mouseup', function (event) {
+    console.log('pt mouseup clientX', event.clientX, 'clientY', event.clientY);
+    play_from_top_toggle();
   });
 
   let fi = document.querySelector('.field--field_image');
@@ -153,7 +166,7 @@ function scroll_track() {
   if (stopped) {
     console.log('scroll_track stopped', stopped);
     // play_from_top();
-    pause_at_bottom();
+    pause_short_read();
   }
 
   // the author image moving off top of screen triggers play from top
@@ -163,16 +176,16 @@ function scroll_track() {
 
   // let rt = my.authorImageDiv.getBoundingClientRect();
   // if (rt.y < 0 || stopped) {
-  //   console.log('pause_at_bottom rt.y < 0', my.paused_at_bottom);
+  //   console.log('pause_short_read rt.y < 0', my.paused_at_bottom);
   //   // play_from_top();
-  //   pause_at_bottom();
+  //   pause_short_read();
   // }
 }
 
 // pause at bottom of screen before playing from top
 //
-function pause_at_bottom() {
-  console.log('pause_at_bottom my.paused_at_bottom', my.paused_at_bottom);
+function pause_short_read() {
+  console.log('pause_short_read my.paused_at_bottom', my.paused_at_bottom);
   if (my.paused_at_bottom) {
     check_scroll_pause();
     if (my.scrollEnabled) {
@@ -238,7 +251,7 @@ function check_line_hilite() {
     console.log('check_line_hilite while end my.elineIndex', my.elineIndex);
     console.log('check_line_hilite fullScan', fullScan, 'wrapScan', wrapScan);
     if (wrapScan) {
-      play_from_top();
+      play_from_top_short();
     }
   } else {
     my.offscreen = 0;
@@ -274,34 +287,30 @@ function line_continue() {
 }
 
 function focus_line() {
-  //
   let el = my.elines[my.elineIndex];
   let rt = el.getBoundingClientRect();
   overlayElement(el);
-
   let midWindow = window.innerHeight / 2;
   if (rt.y < midWindow || rt.y > midWindow + my.lineHeight) {
     let diff = rt.y - midWindow;
     window.scrollBy(0, diff * 0.1);
   }
-
   send_current_line();
 }
 
 function delta_next_line(delta) {
-  //
   my.last_elineIndex = my.elineIndex;
   my.elineIndex = (my.elineIndex + delta + my.elines.length) % my.elines.length;
   my.overlayColorsIndex = (my.overlayColorsIndex + delta + my.overlayColors.length) % my.overlayColors.length;
-
   if (my.elineIndex) {
     send_current_line();
   }
 }
 
 function check_scroll_pause() {
-  if (!my.scrollPauseStart) return;
-  //
+  if (!my.scrollPauseStart) {
+    return;
+  }
   let now = Date.now();
   let nowDiff = now - my.scrollPauseStart;
   if (nowDiff > my.scrollPausePeriod) {
@@ -350,37 +359,40 @@ function send_lineInfo(lineInfo) {
   // ipcRenderer.send('set-line-info', lineInfo);
 }
 
+function play_from_top_toggle() {
+  if (my.full_read_enabled) {
+    play_from_top_short();
+  } else {
+    play_from_top_long();
+  }
+}
+
 function play_from_top_short() {
   console.log('play_from_top_short ', my.full_read_enabled);
-  if (my.full_read_enabled) {
-    webFrame_setZoomFactor(my.zoomFactorShort);
-  }
+  // if (my.full_read_enabled) {
+  //   webFrame_setZoomFactor(my.zoomFactorShort);
+  // }
   play_from_top(my.scrollYTopShort);
   my.full_read_enabled = 0;
 }
 
 function play_from_top_long() {
   console.log('play_from_top_long ', my.full_read_enabled);
-  if (!my.full_read_enabled) {
-    webFrame_setZoomFactor(my.zoomFactorLong);
-  }
+  // if (!my.full_read_enabled) {
+  //   webFrame_setZoomFactor(my.zoomFactorLong);
+  // }
   play_from_top(my.scrollYTopLong);
   my.full_read_enabled = 1;
 }
 
 function play_from_top(ytop) {
-  //
   // gc();
   my.gcCount++;
   console.log('my.gcCount', my.gcCount);
-
   window.scrollTo(0, ytop);
-
   start_scroll_pause();
-
   my.elineIndex = 0;
   my.elineDelayCount = 0;
   my.overlayColorsIndex = (my.overlayColorsIndex + 1) % my.overlayColors.length;
-
   send_current_line();
 }
