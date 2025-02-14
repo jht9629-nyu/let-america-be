@@ -30,41 +30,37 @@ my.scrollYTopLong = 460;
 my.scrollPeriod = 0.1;
 my.elineDelayPeriod = 30 * 0.5;
 
-my.zoomFactorShort = 1.4;
-my.zoomFactorLong = 2.18;
+my.zoomFactorShort = 1.0;
+my.zoomFactorLong = 2.0;
+// my.zoomFactorShort = 1.4;
+// my.zoomFactorLong = 2.18;
 
 my.gcCount = 0;
 my.margin = 32;
 my.overlayColors = ['rgba(255, 80, 80, 1.0)', 'rgba(255, 180, 60, 1.0)', 'rgba(60, 190, 70, 1.0)'];
 my.overlayColorsIndex = 0;
 
-setup_responder();
+// setup_responder();
 
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(setup_scroll, 1000);
 
-  webFrame.setZoomFactor(my.zoomFactorShort);
-  // webFrame.setZoomFactor(my.zoomFactorLong);
+  webFrame_setZoomFactor(my.zoomFactorShort);
+  // webFrame_setZoomFactor(my.zoomFactorLong);
 
-  let zoomFactor = webFrame.getZoomFactor();
+  let zoomFactor = webFrame_getZoomFactor();
   console.log('zoomFactor', zoomFactor);
 
-  mbase_report_status({ msg: 'Here!' });
+  // mbase_report_status({ msg: 'Here!' });
 });
 
 window.addEventListener('mouseup', function (event) {
   // console.log('mouseup clientX', event.clientX, 'clientY', event.clientY);
-  let zoomFactor = webFrame.getZoomFactor();
+  let zoomFactor = webFrame_getZoomFactor();
   console.log('mouseup window.scrollY', window.scrollY, 'my.scrollEnabled', my.scrollEnabled);
   console.log('zoomFactor', zoomFactor);
   my.scrollEnabled = !my.scrollEnabled;
 });
-
-// window.addEventListener('resize', window_resize_handler);
-// function window_resize_handler() {
-//   console.log('window_resize_handler');
-//   position_qrcode();
-// }
 
 function setup_scroll() {
   //
@@ -278,3 +274,68 @@ function check_scroll_pause() {
 // let my.scrollYTop = 635;
 // window.innerWidth 520
 // my.lastScrollY;
+
+function webFrame_setZoomFactor(n) {
+  document.body.style.zoom = n;
+}
+
+function webFrame_getZoomFactor() {
+  return parseFloat(document.body.style.zoom);
+}
+
+function start_scroll_pause() {
+  my.scrollEnabled = 0;
+  my.scrollPausePeriod = 5000;
+  my.scrollPauseStart = Date.now();
+}
+
+function send_current_line() {
+  console.log('send_current_line');
+  if (!my.elines) return;
+  let eln = my.elines[my.elineIndex];
+  let num = my.elineIndex + 1;
+  let text = eln.textContent;
+  let color = my.overlayColors[my.overlayColorsIndex];
+  if (!my.offscreen) {
+    send_lineInfo({ num, text, color });
+  }
+}
+
+// lineInfo = { num, text }
+function send_lineInfo(lineInfo) {
+  console.log('send_lineInfo lineInfo', lineInfo);
+  // ipcRenderer.send('set-line-info', lineInfo);
+}
+
+function play_from_top_short() {
+  if (my.full_read_enabled) {
+    webFrame_setZoomFactor(my.zoomFactorShort);
+  }
+  play_from_top(my.scrollYTopShort);
+  my.full_read_enabled = 0;
+}
+
+function play_from_top_long() {
+  if (!my.full_read_enabled) {
+    webFrame_setZoomFactor(my.zoomFactorLong);
+  }
+  play_from_top(my.scrollYTopLong);
+  my.full_read_enabled = 1;
+}
+
+function play_from_top(ytop) {
+  //
+  // gc();
+  my.gcCount++;
+  console.log('my.gcCount', my.gcCount);
+
+  window.scrollTo(0, ytop);
+
+  start_scroll_pause();
+
+  my.elineIndex = 0;
+  my.elineDelayCount = 0;
+  my.overlayColorsIndex = (my.overlayColorsIndex + 1) % my.overlayColors.length;
+
+  send_current_line();
+}
