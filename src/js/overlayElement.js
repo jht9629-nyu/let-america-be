@@ -2,6 +2,13 @@
 
 function overlayElement(elt) {
   // Create a new div element for the overlay
+  if (!my.overlayBack) {
+    my.overlayBack = document.createElement('div');
+    my.fieldBody.appendChild(my.overlayBack);
+    my.overlayBack.style.position = 'fixed';
+    my.overlayBack.style.pointerEvents = 'none'; // Ensures the overlay doesn't block clicks
+    my.overlayBack.style.backgroundColor = 'white';
+  }
   if (!my.overlay) {
     my.overlay = document.createElement('div');
     my.fieldBody.appendChild(my.overlay);
@@ -24,9 +31,15 @@ function overlayElement(elt) {
 
   let x1 = 0;
   let w1 = window.innerWidth;
+
+  my.overlayBack.style.top = `${y}px`;
+  // my.overlayBack.style.left = `${x}px`;
+  // my.overlayBack.style.width = `${width}px`;
+  my.overlayBack.style.left = `${x1}px`;
+  my.overlayBack.style.width = `${w1}px`;
+  my.overlayBack.style.height = `${height}px`;
+
   my.overlay.style.top = `${y}px`;
-  // my.overlay.style.left = `${x}px`;
-  // my.overlay.style.width = `${width}px`;
   my.overlay.style.left = `${x1}px`;
   my.overlay.style.width = `${w1}px`;
   my.overlay.style.height = `${height}px`;
