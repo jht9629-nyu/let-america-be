@@ -72,7 +72,8 @@ function setup_scroll() {
   let ff = document.querySelector('.field .field--field_image');
   ff.addEventListener('mouseup', function (event) {
     console.log('ff mouseup clientX', event.clientX, 'clientY', event.clientY);
-    play_from_top_long();
+    // play_from_top_long();
+    play_from_top_short();
   });
 
   let fi = document.querySelector('.field--field_image');
@@ -148,12 +149,17 @@ function scroll_track() {
   if (!my.scrollEnabled) return;
   window.scrollBy(0, 1);
 
+  let stopped = !my.full_read_enabled && my.elineIndex == my.shortStopLineNum - 1;
+  if (stopped) {
+    console.log('scroll_track stopped', stopped);
+    // play_from_top();
+    pause_at_bottom();
+  }
+
   // the author image moving off top of screen triggers play from top
   // in short read, when view is two column,
   // For Langstons' "America..." this is line 8 of poem
   // in full read the image is below the last line of poem
-
-  let stopped = !my.full_read_enabled && my.elineIndex == my.shortStopLineNum - 1;
 
   // let rt = my.authorImageDiv.getBoundingClientRect();
   // if (rt.y < 0 || stopped) {
