@@ -75,6 +75,9 @@ function setup_scroll() {
     play_from_top_long();
   });
 
+  let fi = document.querySelector('.field--field_image');
+  my.authorImageDiv = fi;
+
   // remove more by poet block at end of page
   let mp = document.querySelector('#block-views-block-poems-more-by-poet');
   while (mp.firstChild) {
@@ -88,9 +91,6 @@ function setup_scroll() {
 
   let be = document.querySelector('#block-poemadaysignupblock');
   be.remove();
-
-  let fi = document.querySelector('.field--field_image');
-  my.authorImageDiv = fi;
 
   let nt = document.querySelector('.navbar-toggler');
   nt.remove();
