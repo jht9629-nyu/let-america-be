@@ -3,7 +3,7 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=5';
+my.version = '?v=6';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -140,6 +140,13 @@ function setup_main() {
 function scroll_event() {
   my.lastScrollY = window.scrollY;
   // check_scroll_pause();
+  if (my.pause_short_read_pending && !my.next_line_pending) {
+    if (my.scrollEnabled) {
+      pause_short_read();
+      my.pause_short_read_pending = 0;
+    }
+    return;
+  }
   if (my.focusEnabled) {
     focus_line();
     return;
@@ -150,11 +157,13 @@ function scroll_event() {
     return;
   }
   window.scrollBy(0, 1);
-  let stopped = !my.full_read_enabled && my.elineIndex == my.shortStopLineNum - 1;
-  if (stopped) {
-    console.log('scroll_event stopped', stopped);
+  let shortStop = !my.full_read_enabled && my.elineIndex == my.shortStopLineNum - 1;
+  if (shortStop) {
+    console.log('scroll_event shortStop', shortStop);
     // play_from_top();
-    pause_short_read();
+    // pause_short_read();
+    start_scroll_pause();
+    my.pause_short_read_pending = 1;
   }
   // the author image moving off top of screen triggers play from top
   // in short read, when view is two column,
@@ -162,7 +171,7 @@ function scroll_event() {
   // in full read the image is below the last line of poem
 
   // let rt = my.authorImageDiv.getBoundingClientRect();
-  // if (rt.y < 0 || stopped) {
+  // if (rt.y < 0 || shortStop) {
   //   console.log('pause_short_read rt.y < 0', my.paused_at_bottom);
   //   // play_from_top();
   //   pause_short_read();
@@ -200,6 +209,7 @@ function check_line_hilite() {
   if (my.elineIndex == my.last_elineIndex) {
     send_current_line();
   }
+  my.next_line_pending = 0;
 
   if (!my.eline_timer.check()) return;
 
@@ -248,4 +258,5 @@ function check_line_hilite() {
     return;
   }
   advance_next_line();
+  my.next_line_pending = 1;
 }
