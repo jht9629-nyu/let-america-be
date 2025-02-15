@@ -3,6 +3,7 @@
 let my = {};
 window.my = my;
 
+my.version = '?v=4';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -38,6 +39,11 @@ function setup_main() {
 
   setup_dbase();
 
+  {
+    ab = document.querySelector('.navbar-brand');
+    aa = ab.querySelector('a');
+    aa.innerHTML += ' ' + my.version;
+  }
   // click on navbar at top of page -> play_from_top_toggle
   let nv = document.querySelector('.navbar');
   nv.addEventListener('mouseup', function (event) {

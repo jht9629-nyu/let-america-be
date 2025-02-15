@@ -13,18 +13,20 @@ quiet=--quiet
 
 # ./moLib/bin/build.sh --src ./ --files src,README.md --prod $quiet
 
+VERSION=$(grep -e "my.version =" src/js/a-main.js)
+
 git add . 
-git commit $quiet -m "`cat gen/build_ver.txt`"
+git commit $quiet -m "$VERSION"
 git push $quiet
 
 # switch to release, and merge in main
 git checkout release $quiet
-git merge main $quiet -m "`cat gen/build_ver.txt`"
+git merge main $quiet -m "$VERSION"
 git push $quiet
 
 # switch back to main
 git checkout main $quiet
 
 echo
-echo "build `cat gen/build_ver.txt`"
+echo "build $VERSION"
 
