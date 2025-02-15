@@ -3,7 +3,7 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=4';
+my.version = '?v=5';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
