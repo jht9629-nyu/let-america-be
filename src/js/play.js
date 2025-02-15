@@ -72,18 +72,7 @@ function start_scroll_pause() {
   }
   my.scroll_pause_timer.restart();
   my.scrollEnabled = 0;
-  // my.scrollPauseStart = 1;
 }
-
-// function check_scroll_pause() {
-//   if (!my.scroll_pause_timer) {
-//     return;
-//   }
-//   if (my.scroll_pause_timer.check()) {
-//     my.scrollEnabled = 1;
-//     // my.scrollPauseStart = 0;
-//   }
-// }
 
 function send_current_line() {
   // console.log('send_current_line');
