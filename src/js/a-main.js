@@ -140,7 +140,8 @@ function setup_main() {
 function scroll_event() {
   my.lastScrollY = window.scrollY;
   // check_scroll_pause();
-  if (my.pause_short_read_pending && !my.next_line_pending) {
+  // !my.next_line_pending &&
+  if (my.pause_short_read_pending) {
     if (my.scrollEnabled) {
       pause_short_read();
       my.pause_short_read_pending = 0;
@@ -152,6 +153,9 @@ function scroll_event() {
     return;
   } else {
     check_line_hilite();
+    if (my.next_line_pending) {
+      return;
+    }
   }
   if (!my.scrollEnabled) {
     return;
