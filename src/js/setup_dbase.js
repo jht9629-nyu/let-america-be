@@ -23,7 +23,7 @@ function observe_item() {
   dbase.observe('item', { observed_item });
 
   function observed_item(item) {
-    console.log('observe_item observed_item', item);
+    // console.log('observe_item observed_item', item);
 
     dbase.if_action({ item, prop: 'action_rewind', actionFunc: rewind_action });
     dbase.if_action({ item, prop: 'action_full_read', actionFunc: full_read_action });

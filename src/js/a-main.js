@@ -127,8 +127,6 @@ function setup_main() {
   {
     let period = my.scrollPeriod;
     my.scroll_timer = new PeriodTimer({ period, timer_event: scroll_event });
-    // let period = my.scrollPeriod * 1000;
-    // setInterval(scroll_event, period);
   }
 
   window.scrollTo(0, my.scrollYTopShort);
@@ -140,55 +138,29 @@ function setup_main() {
 
 function scroll_event() {
   my.lastScrollY = window.scrollY;
-  // check_scroll_pause();
-  // !my.next_line_pending &&
-  if (my.pause_short_read_pending) {
-    if (my.scrollEnabled) {
-      pause_short_read();
-      my.pause_short_read_pending = 0;
-    }
-    return;
-  }
   if (my.focusEnabled) {
     focus_line();
     return;
   } else {
     check_line_hilite();
-    if (my.next_line_pending) {
-      return;
-    }
   }
   if (!my.scrollEnabled) {
+    // console.log('scroll_event !my.scrollEnabled', my.scroll_pause_timer.lapse());
     return;
   }
   window.scrollBy(0, 1);
   let shortStop = !my.full_read_enabled && my.elineIndex == my.shortStopLineNum - 1;
+  // console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
   if (shortStop) {
-    console.log('scroll_event shortStop', shortStop);
-    // play_from_top();
-    // pause_short_read();
-    start_scroll_pause();
-    my.pause_short_read_pending = 1;
+    console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
+    pause_short_read();
   }
-  // the author image moving off top of screen triggers play from top
-  // in short read, when view is two column,
-  // For Langstons' "America..." this is line 8 of poem
-  // in full read the image is below the last line of poem
-
-  // let rt = my.authorImageDiv.getBoundingClientRect();
-  // if (rt.y < 0 || shortStop) {
-  //   console.log('pause_short_read rt.y < 0', my.paused_at_bottom);
-  //   // play_from_top();
-  //   pause_short_read();
-  // }
 }
 
 // pause at bottom of screen before playing from top
 function pause_short_read() {
   console.log('pause_short_read my.paused_at_bottom', my.paused_at_bottom);
-  //
   if (my.paused_at_bottom) {
-    // check_scroll_pause();
     if (my.scrollEnabled) {
       play_from_top_short();
       my.paused_at_bottom = 0;
@@ -196,6 +168,7 @@ function pause_short_read() {
     return;
   }
   my.paused_at_bottom = 1;
+  // sets my.scrollEnabled = 0
   start_scroll_pause();
 }
 
@@ -214,7 +187,7 @@ function check_line_hilite() {
   if (my.elineIndex == my.last_elineIndex) {
     send_current_line();
   }
-  my.next_line_pending = 0;
+  // my.next_line_pending = 0;
 
   if (!my.eline_timer.check()) return;
 
@@ -228,7 +201,7 @@ function check_line_hilite() {
   // if line is off top screen
   // search down for line that's on at mid window point
   if (rt.y < 0) {
-    console.log('check_line_hilite rt.y < 0', rt.y < 0, 'my.elineIndex', my.elineIndex);
+    // console.log('check_line_hilite rt.y < 0', rt.y < 0, 'my.elineIndex', my.elineIndex);
     // Hilite scroll off top of screen
     let lastLine = my.elineIndex;
     my.offscreen = 1;
@@ -250,8 +223,8 @@ function check_line_hilite() {
         break;
       }
     }
-    console.log('check_line_hilite while end my.elineIndex', my.elineIndex);
-    console.log('check_line_hilite fullScan', fullScan, 'wrapScan', wrapScan);
+    // console.log('check_line_hilite while end my.elineIndex', my.elineIndex);
+    // console.log('check_line_hilite fullScan', fullScan, 'wrapScan', wrapScan);
     if (wrapScan && my.scrollEnabled) {
       play_from_top_short();
       start_scroll_pause();
@@ -263,5 +236,5 @@ function check_line_hilite() {
     return;
   }
   advance_next_line();
-  my.next_line_pending = 1;
+  // my.next_line_pending = 1;
 }
