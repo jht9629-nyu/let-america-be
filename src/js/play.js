@@ -26,7 +26,9 @@ function play_from_top(ytop) {
   window.scrollTo(0, ytop);
   start_scroll_pause();
   my.elineIndex = 0;
-  my.elineDelayCount = 0;
+
+  my.eline_timer.restart();
+
   my.overlayColorsIndex = (my.overlayColorsIndex + 1) % my.overlayColors.length;
   send_current_line();
 }
@@ -60,23 +62,28 @@ function delta_next_line(delta) {
   }
 }
 
-function check_scroll_pause() {
-  if (!my.scrollPauseStart) {
-    return;
+function start_scroll_pause() {
+  if (!my.scroll_pause_timer) {
+    let period = 5.0;
+    function timer_event() {
+      my.scrollEnabled = 1;
+    }
+    my.scroll_pause_timer = new PeriodTimer({ period, timer_event });
   }
-  let now = Date.now();
-  let nowDiff = now - my.scrollPauseStart;
-  if (nowDiff > my.scrollPausePeriod) {
-    my.scrollEnabled = 1;
-    my.scrollPauseStart = 0;
-  }
+  my.scroll_pause_timer.restart();
+  my.scrollEnabled = 0;
+  // my.scrollPauseStart = 1;
 }
 
-function start_scroll_pause() {
-  my.scrollEnabled = 0;
-  my.scrollPausePeriod = 5000;
-  my.scrollPauseStart = Date.now();
-}
+// function check_scroll_pause() {
+//   if (!my.scroll_pause_timer) {
+//     return;
+//   }
+//   if (my.scroll_pause_timer.check()) {
+//     my.scrollEnabled = 1;
+//     // my.scrollPauseStart = 0;
+//   }
+// }
 
 function send_current_line() {
   // console.log('send_current_line');
@@ -112,5 +119,5 @@ function line_previous() {
 function line_continue() {
   my.scrollEnabled = 1;
   my.focusEnabled = 0;
-  my.elineDelayCount = 0;
+  my.eline_timer.restart();
 }

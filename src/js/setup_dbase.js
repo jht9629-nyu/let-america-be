@@ -3,23 +3,18 @@
 let dbase;
 
 async function setup_dbase() {
-  console.log('mbase_init Enter ');
-
+  // console.log('setup_dbase Enter ');
   my.fireb_config = 'jht9629';
   // my.fireb_config = 'jhtitp';
   my.mo_app = my.mo_app || 'mo-america-be';
   my.mo_room = my.mo_room || 'm1-america';
   my.mo_group = my.mo_group || 's0';
   my.nameDevice = 'america';
-
   if (my.mo_group == 's0') {
     my.mo_room = 'm0-' + my.mo_room.substring(3);
   }
-
-  console.log('mbase_init my.mo_app', my.mo_app, 'my.mo_room', my.mo_room, 'my.mo_group', my.mo_group);
-
+  console.log('setup_dbase my.mo_app', my.mo_app, 'my.mo_room', my.mo_room, 'my.mo_group', my.mo_group);
   dbase = await mo_dbase_init(my);
-
   observe_item();
 }
 

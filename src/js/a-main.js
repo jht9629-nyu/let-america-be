@@ -113,10 +113,16 @@ function setup_main() {
   my.elines = ar.querySelectorAll('.long-line');
 
   my.elineIndex = 0;
-  my.elineDelayCount = 0;
-
-  let period = my.scrollPeriod * 1000;
-  setInterval(scroll_track, period);
+  {
+    let period = 2.0;
+    my.eline_timer = new PeriodTimer({ period });
+  }
+  {
+    let period = my.scrollPeriod;
+    my.scroll_timer = new PeriodTimer({ period, timer_event: scroll_event });
+    // let period = my.scrollPeriod * 1000;
+    // setInterval(scroll_event, period);
+  }
 
   window.scrollTo(0, my.scrollYTopShort);
 
@@ -125,9 +131,9 @@ function setup_main() {
   send_current_line();
 }
 
-function scroll_track() {
+function scroll_event() {
   my.lastScrollY = window.scrollY;
-  check_scroll_pause();
+  // check_scroll_pause();
   if (my.focusEnabled) {
     focus_line();
     return;
@@ -140,7 +146,7 @@ function scroll_track() {
   window.scrollBy(0, 1);
   let stopped = !my.full_read_enabled && my.elineIndex == my.shortStopLineNum - 1;
   if (stopped) {
-    console.log('scroll_track stopped', stopped);
+    console.log('scroll_event stopped', stopped);
     // play_from_top();
     pause_short_read();
   }
@@ -162,7 +168,7 @@ function pause_short_read() {
   console.log('pause_short_read my.paused_at_bottom', my.paused_at_bottom);
   //
   if (my.paused_at_bottom) {
-    check_scroll_pause();
+    // check_scroll_pause();
     if (my.scrollEnabled) {
       play_from_top_short();
       my.paused_at_bottom = 0;
@@ -188,13 +194,14 @@ function check_line_hilite() {
   if (my.elineIndex == my.last_elineIndex) {
     send_current_line();
   }
-  my.elineDelayCount = (my.elineDelayCount + 1) % my.elineDelayPeriod;
-  if (my.elineDelayCount != 1) return;
+
+  if (!my.eline_timer.check()) return;
+
   // delay new hilite until line is in upper half of window
   let midWindow = window.innerHeight / 2;
   if (rt.y > midWindow) {
     // console.log('delayed my.elineIndex', my.elineIndex);
-    my.elineDelayCount = 0;
+    my.eline_timer.restart();
     return;
   }
   // if line is off top screen
@@ -226,6 +233,7 @@ function check_line_hilite() {
     console.log('check_line_hilite fullScan', fullScan, 'wrapScan', wrapScan);
     if (wrapScan && my.scrollEnabled) {
       play_from_top_short();
+      start_scroll_pause();
     }
   } else {
     my.offscreen = 0;
