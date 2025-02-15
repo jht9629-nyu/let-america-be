@@ -22,12 +22,22 @@ function play_from_top_long() {
 function play_from_top(ytop) {
   // gc();
   my.topRunCount++;
-  console.log('my.topRunCount', my.topRunCount);
+  console.log(
+    'my.topRunCount',
+    my.topRunCount,
+    'my.elineIndex',
+    my.elineIndex,
+    'eline_timer lapse',
+    my.eline_timer.lapse(),
+    'scroll_pause_timer.lapse',
+    my.scroll_pause_timer.lapse()
+  );
 
   window.scrollTo(0, ytop);
 
   start_scroll_pause();
 
+  my.last_elineIndex = my.elineIndex;
   my.elineIndex = 0;
 
   my.eline_timer.restart();
@@ -57,8 +67,8 @@ function focus_line() {
 
 function delta_next_line(delta) {
   let diff = my.last_elineIndex != my.elineIndex;
-  my.last_elineIndex = my.elineIndex;
   let ne = my.elines.length;
+  my.last_elineIndex = my.elineIndex;
   my.elineIndex = (my.elineIndex + delta + ne) % ne;
   let no = my.overlayColors.length;
   my.overlayColorsIndex = (my.overlayColorsIndex + delta + no) % no;

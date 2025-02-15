@@ -3,7 +3,7 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=13';
+my.version = '?v=14';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -163,6 +163,7 @@ function scroll_event() {
 function pause_short_read() {
   console.log('pause_short_read my.paused_at_bottom', my.paused_at_bottom);
   if (my.paused_at_bottom) {
+    // my.scrollEnabled is 1 after 5 sec delay
     if (my.scrollEnabled) {
       play_from_top_short();
       my.paused_at_bottom = 0;
@@ -170,7 +171,7 @@ function pause_short_read() {
     return;
   }
   my.paused_at_bottom = 1;
-  // sets my.scrollEnabled = 0
+  // sets my.scrollEnabled = 0, and start 5 sec delay
   start_scroll_pause();
 }
 
@@ -185,6 +186,17 @@ function check_line_hilite() {
     if (rt.y < 0) {
       my.elineIndex = my.last_elineIndex;
     }
+  }
+  let diff = my.last_elineIndex != my.elineIndex;
+  if (!diff) {
+    console.log(
+      '!diff last_elineIndex',
+      my.last_elineIndex,
+      'elineIndex',
+      my.elineIndex,
+      'lapse',
+      my.eline_timer.lapse()
+    );
   }
   // let el = my.elines[my.elineIndex];
   // let rt = el.getBoundingClientRect();
