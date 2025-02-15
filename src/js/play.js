@@ -49,12 +49,13 @@ function focus_line() {
 }
 
 function delta_next_line(delta) {
+  let diff = my.last_elineIndex != my.elineIndex;
   my.last_elineIndex = my.elineIndex;
   let ne = my.elines.length;
   my.elineIndex = (my.elineIndex + delta + ne) % ne;
   let no = my.overlayColors.length;
   my.overlayColorsIndex = (my.overlayColorsIndex + delta + no) % no;
-  if (my.elineIndex) {
+  if (my.elineIndex && diff) {
     send_current_line();
   }
 }
