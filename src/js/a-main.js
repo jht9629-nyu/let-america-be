@@ -3,7 +3,7 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=12';
+my.version = '?v=13';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -45,11 +45,11 @@ function setup_main() {
   //   aa.innerHTML += ' ' + my.version;
   // }
 
-  // click on navbar at top of page -> play_from_top_toggle
+  // click on navbar at top of page -> play_from_top_long
   let nv = document.querySelector('.navbar');
   nv.addEventListener('mouseup', function (event) {
     console.log('nv mouseup clientX', event.clientX, 'clientY', event.clientY);
-    play_from_top_toggle();
+    play_from_top_long();
   });
   my.navbar_div = nv;
 
@@ -66,19 +66,20 @@ function setup_main() {
     }
   }
 
-  // click on langston's image -> play_from_top_short
+  // click on langston's image -> play_from_top_toggle
   let ff = document.querySelector('.field .field--field_image');
   ff.addEventListener('mouseup', function (event) {
     console.log('ff mouseup clientX', event.clientX, 'clientY', event.clientY);
     // play_from_top_long();
-    play_from_top_short();
+    // play_from_top_short();
+    play_from_top_toggle();
   });
 
-  // click on "Let America Be Ameria" title at top of page -> play_from_top_toggle
+  // click on "Let America Be Ameria" title at top of page -> play_from_top_short
   let pt = document.querySelector('.poem__title');
   pt.addEventListener('mouseup', function (event) {
     console.log('pt mouseup clientX', event.clientX, 'clientY', event.clientY);
-    play_from_top_toggle();
+    play_from_top_short();
   });
 
   let fi = document.querySelector('.field--field_image');
@@ -116,12 +117,13 @@ function setup_main() {
   let fb = ar.querySelector('.field--body');
   my.fieldBody = fb.querySelector('p');
 
-  // array of the line elements
+  // array of the line elements -> my.elines
   my.elines = ar.querySelectorAll('.long-line');
 
   my.elineIndex = 0;
   {
-    let period = 2.0;
+    // let period = 2.0;
+    let period = 1.75;
     my.eline_timer = new PeriodTimer({ period });
   }
   {
@@ -174,25 +176,32 @@ function pause_short_read() {
 
 // Keep up last hilite until starting from the top
 function check_line_hilite() {
+  // when we are on the last line
+  // and it is off the top of screen
+  // then stay on the last line
   if (my.last_elineIndex == my.elines.length - 1) {
-    let rt = my.elines[0].getBoundingClientRect();
+    // let rt = my.elines[0].getBoundingClientRect();
+    let { rt } = clientRect_elineIndex(0);
     if (rt.y < 0) {
       my.elineIndex = my.last_elineIndex;
     }
   }
-  let el = my.elines[my.elineIndex];
-  let rt = el.getBoundingClientRect();
+  // let el = my.elines[my.elineIndex];
+  // let rt = el.getBoundingClientRect();
+  let { el, rt } = clientRect_elineIndex(my.elineIndex);
   overlayElement(el);
   // when on last line, keep client updated
   if (my.elineIndex == my.last_elineIndex) {
     send_current_line();
   }
-  // my.next_line_pending = 0;
-
-  if (!my.eline_timer.check()) return;
-
+  if (!my.eline_timer.check()) {
+    // console.log('check_line_hilite !my.eline_timer.check()', my.eline_timer.lapse());
+    return;
+  }
   // delay new hilite until line is in upper half of window
   let midWindow = window.innerHeight / 2;
+  // take off 10 pixels for bottom status area
+  let bottomWindow = window.innerHeight - 10;
   if (rt.y > midWindow) {
     // console.log('delayed my.elineIndex', my.elineIndex);
     my.eline_timer.restart();
@@ -208,11 +217,13 @@ function check_line_hilite() {
     let fullScan = 0;
     let wrapScan = 0;
     let n = my.elines.length;
+    // Find the first line in the center of the window
     while (rt.y < midWindow) {
       my.elineIndex = (my.elineIndex + 1) % my.elines.length;
       // console.log('check_line_hilite next my.elineIndex', my.elineIndex);
-      el = my.elines[my.elineIndex];
-      rt = el.getBoundingClientRect();
+      // el = my.elines[my.elineIndex];
+      // rt = el.getBoundingClientRect();
+      rt = clientRect_elineIndex(my.elineIndex).rt;
       if (lastLine > my.elineIndex) {
         wrapScan = 1;
         break;
@@ -228,6 +239,7 @@ function check_line_hilite() {
     if (wrapScan && my.scrollEnabled) {
       play_from_top_short();
       start_scroll_pause();
+      // my.scrollEnabled now 0
     }
   } else {
     my.offscreen = 0;
@@ -236,5 +248,10 @@ function check_line_hilite() {
     return;
   }
   advance_next_line();
-  // my.next_line_pending = 1;
+}
+
+function clientRect_elineIndex(index) {
+  let el = my.elines[index];
+  let rt = el.getBoundingClientRect();
+  return { el, rt };
 }

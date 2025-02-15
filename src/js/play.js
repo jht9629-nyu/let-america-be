@@ -23,13 +23,17 @@ function play_from_top(ytop) {
   // gc();
   my.topRunCount++;
   console.log('my.topRunCount', my.topRunCount);
+
   window.scrollTo(0, ytop);
+
   start_scroll_pause();
+
   my.elineIndex = 0;
 
   my.eline_timer.restart();
 
   my.overlayColorsIndex = (my.overlayColorsIndex + 1) % my.overlayColors.length;
+
   send_current_line();
 }
 
@@ -39,8 +43,9 @@ function advance_next_line() {
 }
 
 function focus_line() {
-  let el = my.elines[my.elineIndex];
-  let rt = el.getBoundingClientRect();
+  // let el = my.elines[my.elineIndex];
+  // let rt = el.getBoundingClientRect();
+  let { el, rt } = clientRect_elineIndex(my.elineIndex);
   overlayElement(el);
   let midWindow = window.innerHeight / 2;
   if (rt.y < midWindow || rt.y > midWindow + my.lineHeight) {
