@@ -36,26 +36,6 @@ function advance_next_line() {
   delta_next_line(1);
 }
 
-// !!@ Not used: my.focusEnabled
-
-// function line_next() {
-//   delta_next_line(1);
-//   my.scrollEnabled = 0;
-//   my.focusEnabled = 1;
-// }
-
-// function line_previous() {
-//   delta_next_line(-1);
-//   my.scrollEnabled = 0;
-//   my.focusEnabled = 1;
-// }
-
-// function line_continue() {
-//   my.scrollEnabled = 1;
-//   my.focusEnabled = 0;
-//   my.elineDelayCount = 0;
-// }
-
 function focus_line() {
   let el = my.elines[my.elineIndex];
   let rt = el.getBoundingClientRect();
@@ -113,4 +93,23 @@ function send_current_line() {
 function send_lineInfo(lineInfo) {
   // console.log('send_lineInfo lineInfo', lineInfo);
   // ipcRenderer.send('set-line-info', lineInfo);
+  dbase_update_line(lineInfo);
+}
+
+function line_next() {
+  delta_next_line(1);
+  my.scrollEnabled = 0;
+  my.focusEnabled = 1;
+}
+
+function line_previous() {
+  delta_next_line(-1);
+  my.scrollEnabled = 0;
+  my.focusEnabled = 1;
+}
+
+function line_continue() {
+  my.scrollEnabled = 1;
+  my.focusEnabled = 0;
+  my.elineDelayCount = 0;
 }

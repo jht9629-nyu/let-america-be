@@ -22,7 +22,7 @@ my.overlayColors = ['rgba(255, 80, 80, 0.5)', 'rgba(255, 180, 60, 0.5)', 'rgba(6
 // my.overlayColors = ['rgba(255, 80, 80, 1.0)', 'rgba(255, 180, 60, 1.0)', 'rgba(60, 190, 70, 1.0)'];
 my.overlayColorsIndex = 0;
 
-window.addEventListener('DOMContentLoaded', setup_scroll);
+window.addEventListener('DOMContentLoaded', setup_main);
 
 window.addEventListener('mouseup', function (event) {
   // console.log('mouseup clientX', event.clientX, 'clientY', event.clientY);
@@ -32,9 +32,11 @@ window.addEventListener('mouseup', function (event) {
   my.scrollEnabled = !my.scrollEnabled;
 });
 
-function setup_scroll() {
+function setup_main() {
   // console.log('setup_scroll my', my);
   console.log('setup_scroll window.location.href', window.location.href);
+
+  setup_dbase();
 
   // click on navbar at top of page -> play_from_top_toggle
   let nv = document.querySelector('.navbar');
