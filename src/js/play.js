@@ -34,6 +34,9 @@ function play_from_top(ytop) {
   );
 
   window.scrollTo(0, ytop);
+  console.log('ytop', ytop, 'window.scrollY', window.scrollY);
+
+  window.scrollY;
 
   start_scroll_pause();
 
