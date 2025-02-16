@@ -3,16 +3,17 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=16';
+my.version = '?v=17';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
 
 my.shortStopLineNum = 5;
+// on iphone window.scrollTo(0, 0) sometimes fails
+// non-zero seems to help make scroll to top consistent
 my.scrollYTopShort = 1;
 my.scrollYTopLong = 1;
 my.scrollPeriod = 0.1;
-my.elineDelayPeriod = 30 * 0.5;
 
 my.topRunCount = 0;
 my.margin = 32;
@@ -147,7 +148,10 @@ function scroll_event() {
     // console.log('scroll_event !my.scrollEnabled', my.scroll_pause_timer.lapse());
     return;
   }
-  window.scrollBy(0, 1);
+  // Dont scroll for first n lines
+  if (my.elineIndex >= my.shortStopLineNum || my.full_read_enabled) {
+    window.scrollBy(0, 1);
+  }
   let shortStop = !my.full_read_enabled && my.elineIndex == my.shortStopLineNum - 1;
   // console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
   if (shortStop) {
@@ -207,12 +211,13 @@ function check_line_hilite() {
     // console.log('check_line_hilite !my.eline_timer.check()', my.eline_timer.lapse());
     return;
   }
+  console.log('check_line_hilite my.eline_timer.check() lapse', my.eline_timer.lapse());
   // delay new hilite until line is in upper half of window
   let midWindow = window.innerHeight / 2;
   // take off 10 pixels for bottom status area
   let bottomWindow = window.innerHeight - 10;
-  if (rt.y > midWindow) {
-    // console.log('delayed my.elineIndex', my.elineIndex);
+  if (my.full_read_enabled && rt.y > midWindow && my.elineIndex >= my.shortStopLineNum) {
+    console.log('delayed my.elineIndex', my.elineIndex);
     my.eline_timer.restart();
     return;
   }
