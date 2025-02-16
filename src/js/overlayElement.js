@@ -4,6 +4,7 @@ function overlayElement(elt) {
   // Create a new div element for the overlay
   if (!my.overlayBack) {
     my.overlayBack = document.createElement('div');
+    // my.fieldBody.prepend(my.overlayBack);
     my.fieldBody.appendChild(my.overlayBack);
     my.overlayBack.style.position = 'fixed';
     my.overlayBack.style.pointerEvents = 'none'; // Ensures the overlay doesn't block clicks
@@ -11,12 +12,14 @@ function overlayElement(elt) {
   }
   if (!my.overlay) {
     my.overlay = document.createElement('div');
+    // my.fieldBody.prepend(my.overlay);
     my.fieldBody.appendChild(my.overlay);
     my.overlay.style.position = 'fixed';
     my.overlay.style.pointerEvents = 'none'; // Ensures the overlay doesn't block clicks
   }
   if (!my.cloned) {
     my.cloned = elt.cloneNode(true);
+    // my.fieldBody.prepend(my.cloned);
     my.fieldBody.appendChild(my.cloned);
     my.cloned.style.position = 'fixed';
     my.cloned.style.pointerEvents = 'none';
