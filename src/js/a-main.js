@@ -3,17 +3,14 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=15';
+my.version = '?v=16';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
 
 my.shortStopLineNum = 5;
-
-my.scrollYTopShort = 0;
-
-my.scrollYTopLong = 0;
-
+my.scrollYTopShort = 1;
+my.scrollYTopLong = 1;
 my.scrollPeriod = 0.1;
 my.elineDelayPeriod = 30 * 0.5;
 
