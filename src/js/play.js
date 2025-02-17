@@ -98,6 +98,7 @@ function start_scroll_pause(nextState) {
       my.scrollEnabled = 1;
       if (my.nextState) {
         if (my.nextState == my.nextState_play_from_top_short) {
+          clear_word_styles();
           play_from_top_short();
         }
         my.nextState = 0;
