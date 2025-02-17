@@ -160,13 +160,13 @@ function clear_word_styles() {
 function overlay_element_color(index) {
   if (index == undefined) index = my.overlayColorsIndex;
   let n = my.overlayColors.length;
-  return my.overlayColors[index % n];
+  return my.overlayColors[(index + n) % n];
 }
 
 function overlay_element_nextColor(delta) {
   if (!delta) delta = 0;
-  let no = my.overlayColors.length;
-  my.overlayColorsIndex = (my.overlayColorsIndex + delta + no) % no;
+  let n = my.overlayColors.length;
+  my.overlayColorsIndex = (my.overlayColorsIndex + delta + n) % n;
 }
 
 // https://chatgpt.com/

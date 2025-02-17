@@ -3,12 +3,12 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=18';
+my.version = '?v=19';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
 
-my.paraColorIndex = 0;
+my.paraColorIndex = -1;
 my.nextState = 0;
 my.nextState_play_from_top_short = 'nextState_play_from_top_short';
 
@@ -21,8 +21,9 @@ my.scrollPeriod = 0.1;
 
 my.topRunCount = 0;
 my.margin = 32;
-my.overlayColors = ['rgba(255, 80, 80, 0.25)', 'rgba(255, 180, 60, 0.5)', 'rgba(60, 190, 70, 0.5)'];
-// my.overlayColors = ['rgba(255, 80, 80, 1.0)', 'rgba(255, 180, 60, 1.0)', 'rgba(60, 190, 70, 1.0)'];
+// red, green, gold
+my.overlayColors = ['rgba(255, 80, 80, 0.25)', 'rgba(60, 190, 70, 0.5)', 'rgba(255, 180, 60, 0.5)'];
+// my.overlayColors = ['rgba(255, 80, 80, 0.25)', 'rgba(255, 180, 60, 0.5)', 'rgba(60, 190, 70, 0.5)'];
 my.overlayColorsIndex = 0;
 
 window.addEventListener('DOMContentLoaded', setup_main);
