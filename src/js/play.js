@@ -33,19 +33,27 @@ function play_from_top(ytop) {
     my.scroll_pause_timer.lapse()
   );
 
-  window.scrollTo(0, ytop);
-  console.log('ytop', ytop, 'window.scrollY', window.scrollY);
+  // Jump to very top if first line is not already on screen
+  let rt = clientRect_elineIndex(0).rt;
+  if (rt.y < 0 || rt.y + rt.height > window.innerHeight) {
+    window.scrollTo(0, ytop);
+    console.log('ytop', ytop, 'window.scrollY', window.scrollY);
+  }
 
   start_scroll_pause();
 
-  my.last_elineIndex = my.elineIndex;
-  my.elineIndex = 0;
+  set_elineIndex(0);
+
+  overlay_element_nextColor();
 
   my.eline_timer.restart();
 
-  my.overlayColorsIndex = (my.overlayColorsIndex + 1) % my.overlayColors.length;
-
   send_current_line();
+}
+
+function set_elineIndex(index) {
+  my.last_elineIndex = index;
+  my.elineIndex = index;
 }
 
 // Advance to the next line
@@ -57,7 +65,7 @@ function focus_line() {
   // let el = my.elines[my.elineIndex];
   // let rt = el.getBoundingClientRect();
   let { el, rt } = clientRect_elineIndex(my.elineIndex);
-  overlayElement(el);
+  overlay_element(el);
   let midWindow = window.innerHeight / 2;
   if (rt.y < midWindow || rt.y > midWindow + my.lineHeight) {
     let diff = rt.y - midWindow;
@@ -68,23 +76,36 @@ function focus_line() {
 
 function delta_next_line(delta) {
   let diff = my.last_elineIndex != my.elineIndex;
+  // next index is +/- current line
   let ne = my.elines.length;
-  my.last_elineIndex = my.elineIndex;
-  my.elineIndex = (my.elineIndex + delta + ne) % ne;
-  let no = my.overlayColors.length;
-  my.overlayColorsIndex = (my.overlayColorsIndex + delta + no) % no;
+  let index = (my.elineIndex + delta + ne) % ne;
+  set_elineIndex(index);
+
+  overlay_element_nextColor(delta);
+
   if (my.elineIndex && diff) {
     send_current_line();
   }
 }
 
-function start_scroll_pause() {
+function start_scroll_pause(nextState) {
   if (!my.scroll_pause_timer) {
     let period = 5.0;
     function timer_event() {
+      console.log('start_scroll_pause timer_event my.nextState', my.nextState);
       my.scrollEnabled = 1;
+      if (my.nextState) {
+        if (my.nextState == my.nextState_play_from_top_short) {
+          play_from_top_short();
+        }
+        my.nextState = 0;
+      }
     }
     my.scroll_pause_timer = new PeriodTimer({ period, timer_event });
+  }
+  if (nextState) {
+    console.log('start_scroll_pause nextState', my.nextState);
+    my.nextState = nextState;
   }
   my.scroll_pause_timer.restart();
   my.scrollEnabled = 0;
