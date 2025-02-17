@@ -162,15 +162,32 @@ function scroll_event() {
     my.resumeScrollLineNum = my.shortStopLineNum;
   }
   if (my.elineIndex >= my.resumeScrollLineNum) {
+    // Scroll to keep the current line moving toward midWindow
     let { el, rt } = clientRect_elineIndex(my.elineIndex);
     let midWindow = window.innerHeight / 2;
-    if (rt.y > midWindow) {
+    let diff = rt.y - midWindow;
+    if (diff > 0) {
       window.scrollBy(0, 1);
-    } else {
-      // We are pausing scroll to keep curent line below mid point
-      my.resumeScrollLineNum = my.elineIndex + 4;
+    } else if (my.elineIndex <= my.elines.length - 3) {
+      // If we have to pause scroll to keep in middle
+      // pause for at least n lines
+      my.resumeScrollLineNum = my.elineIndex + 3;
     }
   }
+  // Dont scroll for first n lines
+  // if (my.elineIndex < my.shortStopLineNum) {
+  //   my.resumeScrollLineNum = my.shortStopLineNum;
+  // }
+  // if (my.elineIndex >= my.resumeScrollLineNum) {
+  //   let { el, rt } = clientRect_elineIndex(my.elineIndex);
+  //   let midWindow = window.innerHeight / 2;
+  //   if (rt.y > midWindow) {
+  //     window.scrollBy(0, 1);
+  //   } else {
+  //     // We are pausing scroll to keep curent line below mid point
+  //     my.resumeScrollLineNum = my.elineIndex + 4;
+  //   }
+  // }
 
   let shortStop = !my.isFullRead && my.elineIndex == my.shortStopLineNum - 1;
   // console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
