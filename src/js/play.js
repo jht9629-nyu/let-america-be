@@ -1,6 +1,6 @@
 //
 function play_from_top_toggle() {
-  if (my.full_read_enabled) {
+  if (my.isFullRead) {
     play_from_top_short();
   } else {
     play_from_top_long();
@@ -8,15 +8,15 @@ function play_from_top_toggle() {
 }
 
 function play_from_top_short() {
-  console.log('play_from_top_short ', my.full_read_enabled);
+  console.log('play_from_top_short ', my.isFullRead);
   play_from_top(my.scrollYTopShort);
-  my.full_read_enabled = 0;
+  my.isFullRead = 0;
 }
 
 function play_from_top_long() {
-  console.log('play_from_top_long ', my.full_read_enabled);
+  console.log('play_from_top_long ', my.isFullRead);
   play_from_top(my.scrollYTopLong);
-  my.full_read_enabled = 1;
+  my.isFullRead = 1;
 
   clear_word_styles();
 }

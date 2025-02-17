@@ -24,7 +24,7 @@ function overlay_element(elt) {
     my.cloned.style.position = 'fixed';
     my.cloned.style.pointerEvents = 'none';
   }
-  my.overlay.style.backgroundColor = overlay_element_color();
+  my.overlay.style.backgroundColor = overlay_element_color(my.paraColorIndex);
 
   // create_word_spans(elt);
 
@@ -58,52 +58,87 @@ function overlay_element(elt) {
 
 // Expand the words on the current line with individual color background
 function create_word_spans() {
-  if (!my.full_read_enabled) {
-    return;
-  }
   if (!my.spans_expanded) {
     my.spans_expanded = {};
     my.spanColorIndex = 0;
-    my.paraColorIndex = 0;
   }
   color_para();
   let index = my.elineIndex;
   let spec = my.spans_expanded[index];
   let { el, rt } = clientRect_elineIndex(index);
   let spans = el.querySelectorAll('span');
-  if (spans.length > 0) {
-    // words already expanded into spans - adjust background color
-    let spanColorIndex = spec.colorIndex;
-    for (let sindex = 0; sindex < spans.length; sindex++) {
-      let span = spans[sindex];
-      span.style.backgroundColor = overlay_element_color(spanColorIndex);
+  if (spans.length <= 0) {
+    // Expand words at current line into spans and background color
+    let spanColorIndex = my.spanColorIndex;
+    let firstColorIndex = spanColorIndex;
+    words = el.innerHTML.split(' ');
+    el.innerHTML = '';
+    for (let index = 0; index < words.length; index++) {
+      let nn = document.createElement('span');
+      nn.innerHTML = words[index] + ' ';
+      // nn.style.backgroundColor = overlay_element_color(spanColorIndex);
+      el.appendChild(nn);
       spanColorIndex++;
     }
+    my.spanColorIndex++;
+    my.spans_expanded[index] = { colorIndex: firstColorIndex };
+  }
+
+  start_hilite_by_word(index);
+}
+
+// Schedule hilighting of words in the line at index
+// line is already expanded into word spans
+function start_hilite_by_word(lineIndex) {
+  // console.log('start_hilite_by_word lineIndex', lineIndex);
+  if (!my.hword) {
+    my.hword = {};
+  }
+  let period = 0.5;
+  if (!my.hword.timer) {
+    my.hword.timer = new PeriodTimer({ period, timer_event: hilite_word });
+  }
+  if (lineIndex == my.hword.lineIndex) {
+    // console.log('start_hilite_by_word same line lineIndex', lineIndex);
     return;
   }
-  // Expand words at current line into spans and background color
-  let spanColorIndex = my.spanColorIndex;
-  let firstColorIndex = spanColorIndex;
-  words = el.innerHTML.split(' ');
-  el.innerHTML = '';
-  for (let index = 0; index < words.length; index++) {
-    let nn = document.createElement('span');
-    nn.innerHTML = words[index] + ' ';
-    nn.style.backgroundColor = overlay_element_color(spanColorIndex);
-    el.appendChild(nn);
-    spanColorIndex++;
+  // console.log('start_hilite_by_word restart lineIndex', lineIndex);
+  my.hword.timer.restart();
+
+  let { el, rt } = clientRect_elineIndex(lineIndex);
+  my.hword.spans = el.querySelectorAll('span');
+  my.hword.lineIndex = lineIndex;
+  my.hword.colorIndex = my.paraColorIndex + 1;
+  my.hword.wordIndex = 0;
+  my.hword.active = 1;
+  hilite_word();
+  function hilite_word() {
+    let index = my.hword.wordIndex;
+    let spans = my.hword.spans;
+    if (index >= spans.length) {
+      my.hword.active = 0;
+      return;
+    }
+    let prior = my.hword.prior;
+    if (prior) {
+      prior.style.backgroundColor = '';
+    }
+    let span = spans[index];
+    let colorIndex = my.hword.colorIndex;
+    span.style.backgroundColor = overlay_element_color(colorIndex);
+    my.hword.wordIndex = index + 1;
+    my.hword.prior = span;
   }
-  my.spanColorIndex++;
-  my.spans_expanded[index] = { colorIndex: firstColorIndex };
 }
 
 function color_para() {
+  if (!my.isFullRead) return;
   let index = my.elineIndex;
   let { el, rt } = clientRect_elineIndex(index);
   let parent = el.parentNode;
   if (parent.style.backgroundColor) return;
-  parent.style.backgroundColor = overlay_element_color(my.paraColorIndex);
   my.paraColorIndex++;
+  parent.style.backgroundColor = overlay_element_color(my.paraColorIndex);
 }
 
 function clear_word_styles() {

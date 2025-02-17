@@ -8,6 +8,7 @@ my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
 
+my.paraColorIndex = 0;
 my.nextState = 0;
 my.nextState_play_from_top_short = 'nextState_play_from_top_short';
 
@@ -141,6 +142,9 @@ function setup_main() {
 
 function scroll_event() {
   my.lastScrollY = window.scrollY;
+
+  create_word_spans();
+
   if (my.focusEnabled) {
     focus_line();
     return;
@@ -152,16 +156,15 @@ function scroll_event() {
     return;
   }
   // Dont scroll for first n lines
-  if (my.elineIndex >= my.shortStopLineNum || my.full_read_enabled) {
+  if (my.elineIndex >= my.shortStopLineNum || my.isFullRead) {
     window.scrollBy(0, 1);
   }
-  let shortStop = !my.full_read_enabled && my.elineIndex == my.shortStopLineNum - 1;
+  let shortStop = !my.isFullRead && my.elineIndex == my.shortStopLineNum - 1;
   // console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
   if (shortStop) {
     console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
     pause_short_read();
   }
-  create_word_spans();
 }
 
 // pause at bottom of screen before playing from top
@@ -211,11 +214,15 @@ function check_line_hilite() {
   // when on last line, keep client updated
   if (my.elineIndex == my.last_elineIndex) {
     send_current_line();
-  } else {
-    create_word_spans();
+    // } else {
+    //   create_word_spans();
   }
   if (!my.eline_timer.check()) {
     // console.log('check_line_hilite !my.eline_timer.check()', my.eline_timer.lapse());
+    return;
+  }
+  if (!my.hword || my.hword.active) {
+    // console.log('!my.hword || my.hword.active', !my.hword, my.hword.active);
     return;
   }
   // console.log('check_line_hilite my.eline_timer.check() lapse', my.eline_timer.lapse());
@@ -223,11 +230,12 @@ function check_line_hilite() {
   let midWindow = window.innerHeight / 2;
   // take off 10 pixels for bottom status area
   let bottomWindow = window.innerHeight - 10;
-  if (my.full_read_enabled && rt.y > midWindow && my.elineIndex >= my.shortStopLineNum) {
-    // console.log('delayed my.elineIndex', my.elineIndex);
-    my.eline_timer.restart();
-    return;
-  }
+
+  // if (my.isFullRead && rt.y > midWindow && my.elineIndex >= my.shortStopLineNum) {
+  //   // console.log('delayed my.elineIndex', my.elineIndex);
+  //   my.eline_timer.restart();
+  //   return;
+  // }
   // if line is off top screen
   // search down for line that's on at mid window point
   my.offscreen = 1;
@@ -277,9 +285,6 @@ function find_line_up(rt, midWindow) {
     index--;
   }
   // console.log('check_line_hilite while end my.elineIndex', my.elineIndex);
-  if (index < 0) {
-    index = 0;
-  }
   set_elineIndex(index);
 }
 
