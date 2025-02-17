@@ -17,6 +17,8 @@ function play_from_top_long() {
   console.log('play_from_top_long ', my.full_read_enabled);
   play_from_top(my.scrollYTopLong);
   my.full_read_enabled = 1;
+
+  clear_word_styles();
 }
 
 function play_from_top(ytop) {

@@ -63,16 +63,27 @@ function create_word_spans() {
   }
   if (!my.spans_expanded) {
     my.spans_expanded = {};
+    my.spanColorIndex = 0;
+    my.paraColorIndex = 0;
   }
+  color_para();
   let index = my.elineIndex;
-  if (my.spans_expanded[index]) {
-    return;
-  }
+  let spec = my.spans_expanded[index];
   let { el, rt } = clientRect_elineIndex(index);
   let spans = el.querySelectorAll('span');
-  if (spans.length > 0) return;
-  if (!my.spanColorIndex) my.spanColorIndex = 0;
+  if (spans.length > 0) {
+    // words already expanded into spans - adjust background color
+    let spanColorIndex = spec.colorIndex;
+    for (let sindex = 0; sindex < spans.length; sindex++) {
+      let span = spans[sindex];
+      span.style.backgroundColor = overlay_element_color(spanColorIndex);
+      spanColorIndex++;
+    }
+    return;
+  }
+  // Expand words at current line into spans and background color
   let spanColorIndex = my.spanColorIndex;
+  let firstColorIndex = spanColorIndex;
   words = el.innerHTML.split(' ');
   el.innerHTML = '';
   for (let index = 0; index < words.length; index++) {
@@ -83,7 +94,16 @@ function create_word_spans() {
     spanColorIndex++;
   }
   my.spanColorIndex++;
-  my.spans_expanded[index] = 1;
+  my.spans_expanded[index] = { colorIndex: firstColorIndex };
+}
+
+function color_para() {
+  let index = my.elineIndex;
+  let { el, rt } = clientRect_elineIndex(index);
+  let parent = el.parentNode;
+  if (parent.style.backgroundColor) return;
+  parent.style.backgroundColor = overlay_element_color(my.paraColorIndex);
+  my.paraColorIndex++;
 }
 
 function clear_word_styles() {
@@ -95,6 +115,8 @@ function clear_word_styles() {
       let span = spans[sindex];
       span.style.backgroundColor = '';
     }
+    let parent = el.parentNode;
+    parent.style.backgroundColor = '';
   }
 }
 

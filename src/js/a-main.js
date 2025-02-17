@@ -224,7 +224,7 @@ function check_line_hilite() {
   // take off 10 pixels for bottom status area
   let bottomWindow = window.innerHeight - 10;
   if (my.full_read_enabled && rt.y > midWindow && my.elineIndex >= my.shortStopLineNum) {
-    console.log('delayed my.elineIndex', my.elineIndex);
+    // console.log('delayed my.elineIndex', my.elineIndex);
     my.eline_timer.restart();
     return;
   }
