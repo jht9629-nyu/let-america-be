@@ -64,7 +64,7 @@ function create_word_spans() {
   }
   color_para();
   let index = my.elineIndex;
-  let spec = my.spans_expanded[index];
+  // let spec = my.spans_expanded[index];
   let { el, rt } = clientRect_elineIndex(index);
   let spans = el.querySelectorAll('span');
   if (spans.length <= 0) {
@@ -125,7 +125,9 @@ function start_hilite_by_word(lineIndex) {
     }
     let span = spans[index];
     let colorIndex = my.hword.colorIndex;
-    span.style.backgroundColor = overlay_element_color(colorIndex);
+    if (my.isFullRead) {
+      span.style.backgroundColor = overlay_element_color(colorIndex);
+    }
     my.hword.wordIndex = index + 1;
     my.hword.prior = span;
   }

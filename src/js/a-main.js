@@ -155,10 +155,23 @@ function scroll_event() {
     // console.log('scroll_event !my.scrollEnabled', my.scroll_pause_timer.lapse());
     return;
   }
+  // scrollEnabled is true
+
   // Dont scroll for first n lines
-  if (my.elineIndex >= my.shortStopLineNum || my.isFullRead) {
-    window.scrollBy(0, 1);
+  if (my.elineIndex < my.shortStopLineNum) {
+    my.resumeScrollLineNum = my.shortStopLineNum;
   }
+  if (my.elineIndex >= my.resumeScrollLineNum) {
+    let { el, rt } = clientRect_elineIndex(my.elineIndex);
+    let midWindow = window.innerHeight / 2;
+    if (rt.y > midWindow) {
+      window.scrollBy(0, 1);
+    } else {
+      // We are pausing scroll to keep curent line below mid point
+      my.resumeScrollLineNum = my.elineIndex + 4;
+    }
+  }
+
   let shortStop = !my.isFullRead && my.elineIndex == my.shortStopLineNum - 1;
   // console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
   if (shortStop) {
@@ -231,11 +244,6 @@ function check_line_hilite() {
   // take off 10 pixels for bottom status area
   let bottomWindow = window.innerHeight - 10;
 
-  // if (my.isFullRead && rt.y > midWindow && my.elineIndex >= my.shortStopLineNum) {
-  //   // console.log('delayed my.elineIndex', my.elineIndex);
-  //   my.eline_timer.restart();
-  //   return;
-  // }
   // if line is off top screen
   // search down for line that's on at mid window point
   my.offscreen = 1;
