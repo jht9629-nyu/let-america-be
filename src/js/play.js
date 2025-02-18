@@ -1,4 +1,124 @@
 //
+
+// my.currentState
+// my.nextState
+//  my.state_play_from_top_short
+//
+//  state_intro_pause : 3 sec wait
+//  state_intro_step : next line every 2 sec until end of intro
+//    ... state_intro_step
+//  state_intro_end_pause : 3 sec wait
+//    --> state_intro_pause
+//  state_full_pause : sec wait
+//    --> state_full_step
+//  state_full_step : next line every 2 sec until end of poem
+//    ... state_full_step
+//  state_full_end_pause : 3 sec wait until
+//    --> state_intro_step
+//
+
+function state_init() {
+  //
+  my.state_intro_pause = 'state_intro_pause';
+  my.state_intro_step = 'state_intro_step';
+  my.state_intro_end_pause = 'state_intro_end_pause';
+  my.state_full_pause = 'state_full_pause';
+  my.state_full_step = 'state_full_step';
+  my.state_full_end_pause = 'state_full_end_pause';
+  //
+  let period = -1;
+  my.state_timer = new PeriodTimer({ period, timer_event: state_next_event });
+  state_next_event(my.state_intro_pause);
+}
+
+function state_next_event(newState) {
+  console.log('state_next_event my.nextState', my.nextState, 'my.currentState', my.currentState);
+  console.log('state_next_event lapse', my.state_timer.lapse());
+  if (newState) {
+    my.nextState = newState;
+  }
+  let nextState = my.nextState;
+  let period;
+  switch (my.nextState) {
+    case my.state_intro_pause:
+      period = 3.0;
+      start_intro_pause();
+      nextState = my.state_intro_step;
+      break;
+    case my.state_intro_step:
+      period = -1;
+      nextState = my.state_intro_end_pause;
+      break;
+    case my.state_intro_end_pause:
+      period = 3.0;
+      nextState = my.state_intro_pause;
+      break;
+    case my.state_full_pause:
+      period = 3.0;
+      nextState = my.state_full_step;
+      start_full_pause();
+      break;
+    case my.state_full_step:
+      period = -1;
+      nextState = my.state_full_end_pause;
+      break;
+    case my.state_full_end_pause:
+      period = 3.0;
+      nextState = my.state_intro_pause;
+      break;
+  }
+  my.currentState = my.nextState;
+  my.nextState = nextState;
+  my.state_timer.period = period;
+  my.state_timer.restart();
+}
+
+function state_isStepping() {
+  switch (my.currentState) {
+    case my.state_intro_step:
+    case my.state_full_step:
+      return true;
+  }
+  return false;
+}
+
+function start_intro_pause() {
+  clear_word_styles();
+  // play_from_top_short();
+  play_from_top(my.scrollYTopShort);
+}
+
+function start_full_pause() {
+  clear_word_styles();
+  play_from_top(my.scrollYTopLong);
+}
+
+function start_scroll_pause(nextState) {
+  if (!my.scroll_pause_timer) {
+    let period = 5.0;
+    function timer_event() {
+      console.log('start_scroll_pause timer_event my.nextState', my.nextState);
+      console.log('start_scroll_pause timer_event my.currentState', my.currentState);
+      my.scrollEnabled = 1;
+      if (my.nextState) {
+        if (my.nextState == my.state_play_from_top_short) {
+          clear_word_styles();
+          play_from_top_short();
+        }
+        my.currentState = my.nextState;
+        my.nextState = 0;
+      }
+    }
+    my.scroll_pause_timer = new PeriodTimer({ period, timer_event });
+  }
+  if (nextState) {
+    console.log('start_scroll_pause nextState', my.nextState);
+    my.nextState = nextState;
+  }
+  my.scroll_pause_timer.restart();
+  my.scrollEnabled = 0;
+}
+
 function play_from_top_toggle() {
   if (my.isFullRead) {
     play_from_top_short();
@@ -9,34 +129,40 @@ function play_from_top_toggle() {
 
 function play_from_top_short() {
   console.log('play_from_top_short ', my.isFullRead);
-  play_from_top(my.scrollYTopShort);
+  // play_from_top(my.scrollYTopShort);
+
+  state_next_event(my.state_intro_pause);
+
   my.isFullRead = 0;
 }
 
 function play_from_top_long() {
   console.log('play_from_top_long ', my.isFullRead);
+  // play_from_top(my.scrollYTopLong);
+  // clear_word_styles();
 
-  play_from_top(my.scrollYTopLong);
+  state_next_event(my.state_full_pause);
 
   my.isFullRead = 1;
-
-  clear_word_styles();
 }
 
 function play_from_top(ytop) {
   // gc();
   my.topRunCount++;
   console.log(
-    'my.topRunCount',
+    'play_from_top my.topRunCount',
     my.topRunCount,
     'my.elineIndex',
     my.elineIndex,
     'eline_timer lapse',
     my.eline_timer.lapse(),
-    'scroll_pause_timer.lapse',
-    my.scroll_pause_timer.lapse()
+    'state_timer.lapse',
+    my.state_timer.lapse()
   );
-
+  console.log('play_from_top my.scrollEnabled', my.scrollEnabled);
+  // if (my.scrollEnabled) {
+  //   return;
+  // }
   // Jump to very top if first line is not already on screen
   let rt = clientRect_elineIndex(0).rt;
   if (rt.y < 0 || rt.y + rt.height > window.innerHeight) {
@@ -44,7 +170,7 @@ function play_from_top(ytop) {
     console.log('ytop', ytop, 'window.scrollY', window.scrollY);
   }
 
-  start_scroll_pause();
+  // start_scroll_pause();
 
   set_elineIndex(0);
 
@@ -62,6 +188,7 @@ function set_elineIndex(index) {
 
 // Advance to the next line
 function advance_next_line() {
+  console.log('advance_next_line elineIndex', my.elineIndex);
   delta_next_line(1);
 }
 
@@ -90,30 +217,6 @@ function delta_next_line(delta) {
   if (my.elineIndex && diff) {
     send_current_line();
   }
-}
-
-function start_scroll_pause(nextState) {
-  if (!my.scroll_pause_timer) {
-    let period = 5.0;
-    function timer_event() {
-      console.log('start_scroll_pause timer_event my.nextState', my.nextState);
-      my.scrollEnabled = 1;
-      if (my.nextState) {
-        if (my.nextState == my.nextState_play_from_top_short) {
-          clear_word_styles();
-          play_from_top_short();
-        }
-        my.nextState = 0;
-      }
-    }
-    my.scroll_pause_timer = new PeriodTimer({ period, timer_event });
-  }
-  if (nextState) {
-    console.log('start_scroll_pause nextState', my.nextState);
-    my.nextState = nextState;
-  }
-  my.scroll_pause_timer.restart();
-  my.scrollEnabled = 0;
 }
 
 function send_current_line() {

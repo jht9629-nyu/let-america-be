@@ -3,14 +3,14 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=25';
+my.version = '?v=26';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
 
 my.paraColorIndex = -1;
 my.nextState = 0;
-my.nextState_play_from_top_short = 'nextState_play_from_top_short';
+my.state_play_from_top_short = 'state_play_from_top_short';
 
 my.shortStopLineNum = 5;
 // on iphone window.scrollTo(0, 0) sometimes fails
@@ -29,11 +29,15 @@ my.overlayColorsIndex = 0;
 window.addEventListener('DOMContentLoaded', setup_main);
 
 window.addEventListener('mouseup', function (event) {
+  console.log('window mouseup event', event);
+  console.log('window mouseup event.target', event.target);
   // console.log('mouseup clientX', event.clientX, 'clientY', event.clientY);
   // let zoomFactor = webFrame_getZoomFactor();
-  console.log('mouseup window.scrollY', window.scrollY, 'my.scrollEnabled', my.scrollEnabled);
+  if (event.target.nodeName !== 'BUTTON') {
+    my.scrollEnabled = !my.scrollEnabled;
+    console.log('window mouseup window.scrollY', window.scrollY, 'my.scrollEnabled', my.scrollEnabled);
+  }
   // console.log('zoomFactor', zoomFactor);
-  // my.scrollEnabled = !my.scrollEnabled;
 });
 
 function setup_main() {
@@ -46,20 +50,28 @@ function setup_main() {
     let ab = document.querySelector('.navbar-brand');
     let bb = document.createElement('button');
     bb.innerHTML = 'Comment';
-    bb.addEventListener('mouseup', function (event) {
-      event.preventDefault();
-      console.log('Comment mouseup  ');
-    });
+    bb.addEventListener(
+      'mouseup',
+      function (event) {
+        event.preventDefault();
+        console.log('Comment mouseup  ');
+      },
+      { capture: true }
+    );
     ab.prepend(bb);
 
     bb = document.createElement('button');
     bb.innerHTML = 'Read';
-    bb.addEventListener('mouseup', function (event) {
-      event.preventDefault();
-      console.log('Read mouseup  ');
-      issue_action_full_read();
-      // dbase.issue_action('action_full_read', 'item');
-    });
+    bb.addEventListener(
+      'mouseup',
+      function (event) {
+        event.preventDefault();
+        console.log('Read mouseup  ');
+        issue_action_full_read();
+        // dbase.issue_action('action_full_read', 'item');
+      },
+      { capture: true }
+    );
     ab.prepend(bb);
   }
   // click on navbar at top of page -> play_from_top_long
@@ -88,7 +100,6 @@ function setup_main() {
   ff.addEventListener('mouseup', function (event) {
     console.log('ff mouseup clientX', event.clientX, 'clientY', event.clientY);
     // play_from_top_long();
-    // play_from_top_short();
     play_from_top_toggle();
   });
 
@@ -150,7 +161,8 @@ function setup_main() {
 
   window.scrollTo(0, my.scrollYTopShort);
 
-  start_scroll_pause(my.nextState_play_from_top_short);
+  // start_scroll_pause(my.state_play_from_top_short);
+  state_init();
 
   send_current_line();
 }
@@ -166,12 +178,12 @@ function scroll_event() {
   } else {
     check_line_hilite();
   }
-  if (!my.scrollEnabled) {
-    // console.log('scroll_event !my.scrollEnabled', my.scroll_pause_timer.lapse());
-    return;
-  }
-  // scrollEnabled is true
 
+  if (state_isStepping()) {
+    scroll_event_step();
+  }
+}
+function scroll_event_step() {
   // Dont scroll for first n lines
   if (my.elineIndex < my.shortStopLineNum) {
     my.resumeScrollLineNum = my.shortStopLineNum;
@@ -190,12 +202,21 @@ function scroll_event() {
     }
   }
 
-  let shortStop = !my.isFullRead && my.elineIndex == my.shortStopLineNum - 1;
-  // console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
-  if (shortStop) {
-    console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
-    pause_short_read();
+  if (my.currentState == my.state_intro_step) {
+    let shortStop = my.elineIndex == my.shortStopLineNum - 1;
+    // console.log('scroll_event shortStop', shortStop, my.state_timer.lapse());
+    if (shortStop) {
+      console.log('scroll_event shortStop', shortStop, my.state_timer.lapse());
+      // pause_short_read();
+      state_next_event();
+    }
   }
+  // let shortStop = !my.isFullRead && my.elineIndex == my.shortStopLineNum - 1;
+  // // console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
+  // if (shortStop) {
+  //   console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
+  //   pause_short_read();
+  // }
 }
 
 // pause at bottom of screen before playing from top
@@ -211,7 +232,7 @@ function pause_short_read() {
   }
   my.paused_at_bottom = 1;
   // sets my.scrollEnabled = 0, and start 5 sec delay
-  start_scroll_pause(my.nextState_play_from_top_short);
+  start_scroll_pause(my.state_play_from_top_short);
 }
 
 // Keep up last hilite until starting from the top
@@ -236,8 +257,6 @@ function check_line_hilite() {
   // when on last line, keep client updated
   if (my.elineIndex == my.last_elineIndex) {
     send_current_line();
-    // } else {
-    //   create_word_spans();
   }
   if (!my.eline_timer.check()) {
     // console.log('check_line_hilite !my.eline_timer.check()', my.eline_timer.lapse());
@@ -265,10 +284,13 @@ function check_line_hilite() {
   } else {
     my.offscreen = 0;
   }
-  if (!my.scrollEnabled) {
-    return;
+  // if (!my.scrollEnabled) {
+  //   return;
+  // }
+  if (state_isStepping()) {
+    advance_next_line();
   }
-  advance_next_line();
+  // advance_next_line();
 }
 
 // current line is off the top of screen
@@ -287,9 +309,11 @@ function find_line_down(rt, midWindow) {
   }
   let onlast = index == my.elines.length - 1;
   set_elineIndex(index);
-  if (onlast && my.scrollEnabled) {
+  if (onlast && state_isStepping()) {
+    // if (onlast && my.scrollEnabled) {
     console.log('find_line_down onlast && my.scrollEnabled ---- rt.y', rt.y, 'elineIndex', my.elineIndex);
-    start_scroll_pause(my.nextState_play_from_top_short);
+    state_next_event();
+    // start_scroll_pause(my.state_play_from_top_short);
     // my.scrollEnabled now 0
   }
 }

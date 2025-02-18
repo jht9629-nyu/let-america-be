@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>let-american-be</title>
+  </head>
+  <body>
+    <div>
+      <h1 id="id_title">Welcome to let-american-be ?v=43</h1>
+      By entering this site you agree to have anonymous user data stored <br />
+      <h2>
+        <a href="../index.html?" id="id_link">
+          <!-- -->
+          Enter let-american-be
+        </a>
+      </h2>
+      <h2>Enter to control of the poem on the big screen!</h2>
+      <br />
+      <br />
+      powered by <a href="https://molab-itp.github.io/moSalon/" target="moSalon"> moSalon</a>
+      <!-- powered by <a href="https://github.com/molab-itp/moLib" target="moLib"> moLib</a> by -->
+      created by <a href="https://jht1493.net" target="jht">John Henry Thompson</a> <br />
+    </div>
+
+    <script>
+      let my_version = '?v=43';
+      let str = window.location.search;
+      if (str) {
+        str = '&' + str.substring(1);
+      } else {
+        str = '';
+      }
+      id_link.href += str;
+      id_title.innerHTML = id_title.innerHTML + str;
+      // id_link.innerHTML += ' ' + str;
+      // window.location = id_link.href;
+
+      // https://molab-itp.github.io/moSalon/src/let-america-be/qrcode/?group=s0
+      // https://molab-itp.github.io/moSalon/src/let-america-be/qrcode/?group=s1
+      // https://molab-itp.github.io/moSalon/src/let-america-be/qrcode/?group=s2
+      //
+    </script>
+  </body>
+</html>

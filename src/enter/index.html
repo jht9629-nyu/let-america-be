@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enter Blackfacts ?v=43</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div>
+      <h1 id="id_title">Welcome to Blackfacts ?v=43</h1>
+      By entering this site you agree to have anonymous user data stored
+      <br />
+      <br />
+      <h3>enter the site to control the big screen!</h3>
+      <h2>
+        <a href="../blackfacts/index.html?v=43" id="id_link" style="display: none">Enter mo-blackfacts </a>
+        <button id="id_button_enter">Enter mo-blackfacts</button>
+      </h2>
+      Share a comment on MLK's legacy:
+      <div>
+        <input id="id_name" type="text" class="textInput" placeholder="your name" style="width: 40%" />
+        <button id="id_button_add">Add</button>
+        <button id="id_button_remove">Remove</button>
+        <!-- <button id="id_button_remove" style="font-size: 4vw">Remove</button> -->
+        <br />
+        <input id="id_comment" type="text" class="textInput" placeholder="comment" />
+        <ol id="id_comments_ol"></ol>
+      </div>
+    </div>
+
+    <div id="id_footer" class="fixed-footer">
+      ?v=43 powered by
+      <a href="https://molab-itp.github.io/moSalon/" target="moSalon"> moSalon</a>
+      <!-- <a href="https://github.com/molab-itp/moSalon" target="moSalon"> moSalon</a> -->
+      created by
+      <a href="https://jht1493.net" target="jht"> JHT </a>
+    </div>
+
+    <script>
+      let str = window.location.search;
+      if (str) {
+        str = '&' + str.substring(1);
+        id_link.href += str;
+        id_title.innerHTML = id_title.innerHTML + str;
+      } else {
+        str = '';
+      }
+    </script>
+  </body>
+
+  <script src="https://unpkg.com/itp-molib@0.2.3/dist/moLib.umd.js?v=43"></script>
+
+  <script src="black_my_setup.js?v=43"></script>
+  <script src="black_setup_dbase.js?v=43"></script>
+  <script src="frame.js?v=43"></script>
+  <script src="index.js?v=43"></script>
+</html>
