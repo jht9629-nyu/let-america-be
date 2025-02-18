@@ -13,6 +13,7 @@ async function setup_dbase() {
   if (my.mo_group == 's0') {
     my.mo_room = 'm0-' + my.mo_room.substring(3);
   }
+  my.appTitle = 'let america be';
   console.log('setup_dbase my.mo_app', my.mo_app, 'my.mo_room', my.mo_room, 'my.mo_group', my.mo_group);
 
   // set group for all devices to share item values
@@ -25,7 +26,7 @@ async function setup_dbase() {
   }
   // src/poem/poem/let-america-be-america-again.html
   my.qrcode_url = function () {
-    return `../../qrcode/${my.mo_group}.png`;
+    return `../../qrcode/${my.mo_group}.png?v=30`;
   };
   my.showQRCode = function () {
     // qrCode is only shown for screen width greater than 800
