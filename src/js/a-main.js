@@ -3,7 +3,7 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=26';
+my.version = '?v=27';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -211,28 +211,6 @@ function scroll_event_step() {
       state_next_event();
     }
   }
-  // let shortStop = !my.isFullRead && my.elineIndex == my.shortStopLineNum - 1;
-  // // console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
-  // if (shortStop) {
-  //   console.log('scroll_event shortStop', shortStop, my.scroll_pause_timer.lapse());
-  //   pause_short_read();
-  // }
-}
-
-// pause at bottom of screen before playing from top
-function pause_short_read() {
-  console.log('pause_short_read my.paused_at_bottom', my.paused_at_bottom);
-  if (my.paused_at_bottom) {
-    // my.scrollEnabled is 1 after 5 sec delay
-    if (my.scrollEnabled) {
-      play_from_top_short();
-      my.paused_at_bottom = 0;
-    }
-    return;
-  }
-  my.paused_at_bottom = 1;
-  // sets my.scrollEnabled = 0, and start 5 sec delay
-  start_scroll_pause(my.state_play_from_top_short);
 }
 
 // Keep up last hilite until starting from the top
@@ -284,13 +262,9 @@ function check_line_hilite() {
   } else {
     my.offscreen = 0;
   }
-  // if (!my.scrollEnabled) {
-  //   return;
-  // }
   if (state_isStepping()) {
     advance_next_line();
   }
-  // advance_next_line();
 }
 
 // current line is off the top of screen
@@ -310,11 +284,8 @@ function find_line_down(rt, midWindow) {
   let onlast = index == my.elines.length - 1;
   set_elineIndex(index);
   if (onlast && state_isStepping()) {
-    // if (onlast && my.scrollEnabled) {
     console.log('find_line_down onlast && my.scrollEnabled ---- rt.y', rt.y, 'elineIndex', my.elineIndex);
     state_next_event();
-    // start_scroll_pause(my.state_play_from_top_short);
-    // my.scrollEnabled now 0
   }
 }
 

@@ -93,32 +93,6 @@ function start_full_pause() {
   play_from_top(my.scrollYTopLong);
 }
 
-function start_scroll_pause(nextState) {
-  if (!my.scroll_pause_timer) {
-    let period = 5.0;
-    function timer_event() {
-      console.log('start_scroll_pause timer_event my.nextState', my.nextState);
-      console.log('start_scroll_pause timer_event my.currentState', my.currentState);
-      my.scrollEnabled = 1;
-      if (my.nextState) {
-        if (my.nextState == my.state_play_from_top_short) {
-          clear_word_styles();
-          play_from_top_short();
-        }
-        my.currentState = my.nextState;
-        my.nextState = 0;
-      }
-    }
-    my.scroll_pause_timer = new PeriodTimer({ period, timer_event });
-  }
-  if (nextState) {
-    console.log('start_scroll_pause nextState', my.nextState);
-    my.nextState = nextState;
-  }
-  my.scroll_pause_timer.restart();
-  my.scrollEnabled = 0;
-}
-
 function play_from_top_toggle() {
   if (my.isFullRead) {
     play_from_top_short();
@@ -129,21 +103,18 @@ function play_from_top_toggle() {
 
 function play_from_top_short() {
   console.log('play_from_top_short ', my.isFullRead);
-  // play_from_top(my.scrollYTopShort);
-
-  state_next_event(my.state_intro_pause);
 
   my.isFullRead = 0;
+
+  state_next_event(my.state_intro_pause);
 }
 
 function play_from_top_long() {
   console.log('play_from_top_long ', my.isFullRead);
-  // play_from_top(my.scrollYTopLong);
-  // clear_word_styles();
-
-  state_next_event(my.state_full_pause);
 
   my.isFullRead = 1;
+
+  state_next_event(my.state_full_pause);
 }
 
 function play_from_top(ytop) {
@@ -160,9 +131,6 @@ function play_from_top(ytop) {
     my.state_timer.lapse()
   );
   console.log('play_from_top my.scrollEnabled', my.scrollEnabled);
-  // if (my.scrollEnabled) {
-  //   return;
-  // }
   // Jump to very top if first line is not already on screen
   let rt = clientRect_elineIndex(0).rt;
   if (rt.y < 0 || rt.y + rt.height > window.innerHeight) {
