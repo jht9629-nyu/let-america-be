@@ -3,7 +3,7 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=24';
+my.version = '?v=25';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -33,7 +33,7 @@ window.addEventListener('mouseup', function (event) {
   // let zoomFactor = webFrame_getZoomFactor();
   console.log('mouseup window.scrollY', window.scrollY, 'my.scrollEnabled', my.scrollEnabled);
   // console.log('zoomFactor', zoomFactor);
-  my.scrollEnabled = !my.scrollEnabled;
+  // my.scrollEnabled = !my.scrollEnabled;
 });
 
 function setup_main() {
@@ -42,19 +42,33 @@ function setup_main() {
 
   setup_dbase();
 
-  // {
-  //   ab = document.querySelector('.navbar-brand');
-  //   aa = ab.querySelector('a');
-  //   aa.innerHTML += ' ' + my.version;
-  // }
+  {
+    let ab = document.querySelector('.navbar-brand');
+    let bb = document.createElement('button');
+    bb.innerHTML = 'Comment';
+    bb.addEventListener('mouseup', function (event) {
+      event.preventDefault();
+      console.log('Comment mouseup  ');
+    });
+    ab.prepend(bb);
 
+    bb = document.createElement('button');
+    bb.innerHTML = 'Read';
+    bb.addEventListener('mouseup', function (event) {
+      event.preventDefault();
+      console.log('Read mouseup  ');
+      issue_action_full_read();
+      // dbase.issue_action('action_full_read', 'item');
+    });
+    ab.prepend(bb);
+  }
   // click on navbar at top of page -> play_from_top_long
-  let nv = document.querySelector('.navbar');
-  nv.addEventListener('mouseup', function (event) {
-    console.log('nv mouseup clientX', event.clientX, 'clientY', event.clientY);
-    play_from_top_long();
-  });
-  my.navbar_div = nv;
+  // let nv = document.querySelector('.navbar');
+  // nv.addEventListener('mouseup', function (event) {
+  //   console.log('nv mouseup clientX', event.clientX, 'clientY', event.clientY);
+  //   play_from_top_long();
+  // });
+  // my.navbar_div = nv;
 
   // remove all a links, except for poets.org
   rns = document.querySelectorAll('a');

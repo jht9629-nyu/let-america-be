@@ -15,7 +15,9 @@ function play_from_top_short() {
 
 function play_from_top_long() {
   console.log('play_from_top_long ', my.isFullRead);
+
   play_from_top(my.scrollYTopLong);
+
   my.isFullRead = 1;
 
   clear_word_styles();

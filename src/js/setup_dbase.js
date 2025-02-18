@@ -25,22 +25,26 @@ function observe_item() {
   function observed_item(item) {
     // console.log('observe_item observed_item', item);
 
-    dbase.if_action({ item, prop: 'action_rewind', actionFunc: rewind_action });
     dbase.if_action({ item, prop: 'action_full_read', actionFunc: full_read_action });
+    dbase.if_action({ item, prop: 'action_rewind', actionFunc: rewind_action });
     dbase.if_action({ item, prop: 'action_next', actionFunc: next_action });
     dbase.if_action({ item, prop: 'action_previous', actionFunc: previous_action });
     dbase.if_action({ item, prop: 'action_continue', actionFunc: continue_action });
   }
 }
 
-function rewind_action() {
-  console.log('rewind_action');
-  play_from_top_short();
+function issue_action_full_read() {
+  dbase.issue_action('item', 'action_full_read');
 }
 
 function full_read_action() {
   console.log('full_read_action');
   play_from_top_long();
+}
+
+function rewind_action() {
+  console.log('rewind_action');
+  play_from_top_short();
 }
 
 function next_action() {

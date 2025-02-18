@@ -144,6 +144,8 @@ function color_para() {
 }
 
 function clear_word_styles() {
+  my.paraColorIndex = -1;
+  // delete my.hword;
   for (let index = 0; index < my.elines.length; index++) {
     let { el, rt } = clientRect_elineIndex(index);
     let spans = el.querySelectorAll('span');
