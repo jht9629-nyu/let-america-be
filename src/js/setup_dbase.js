@@ -14,6 +14,25 @@ async function setup_dbase() {
     my.mo_room = 'm0-' + my.mo_room.substring(3);
   }
   console.log('setup_dbase my.mo_app', my.mo_app, 'my.mo_room', my.mo_room, 'my.mo_group', my.mo_group);
+
+  // set group for all devices to share item values
+  let params = get_url_params();
+  my.query = params;
+  console.log('params', params);
+  my.mo_group = params.group || my.mo_group;
+  if (my.mo_group == 's0') {
+    my.mo_room = 'm0-america';
+  }
+  // src/poem/poem/let-america-be-america-again.html
+  my.qrcode_url = function () {
+    return `../../qrcode/${my.mo_group}.png`;
+  };
+  my.showQRCode = function () {
+    // qrCode is only shown for screen width greater than 800
+    return window.innerWidth > 800;
+  };
+  my.qrCodeClickAction = qrcode_click_action;
+
   dbase = await mo_dbase_init(my);
   observe_item();
 }

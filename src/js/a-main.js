@@ -306,3 +306,19 @@ function clientRect_elineIndex(index) {
   let rt = el.getBoundingClientRect();
   return { el, rt };
 }
+
+function qrcode_click_action() {
+  toggleFullScreen();
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
+}
