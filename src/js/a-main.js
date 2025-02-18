@@ -3,7 +3,7 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=27';
+my.version = '?v=28';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -82,7 +82,7 @@ function setup_main() {
   // });
   // my.navbar_div = nv;
 
-  // remove all a links, except for poets.org
+  // remove most a links, re-direct for poets.org and langston-hughes to source
   rns = document.querySelectorAll('a');
   for (let index = 0; index < rns.length; index++) {
     let ent = rns[index];
@@ -90,6 +90,8 @@ function setup_main() {
     if (ent.href.endsWith('/index.html')) {
       // direct poets.org link in header to real site
       ent.href = 'https://poets.org/poem/let-america-be-america-again';
+    } else if (ent.href.endsWith('/langston-hughes.html')) {
+      ent.href = 'https://poets.org/poet/langston-hughes';
     } else {
       ent.remove();
     }
@@ -174,13 +176,11 @@ function scroll_event() {
 
   if (my.focusEnabled) {
     focus_line();
-    return;
   } else {
     check_line_hilite();
-  }
-
-  if (state_isStepping()) {
-    scroll_event_step();
+    if (state_isStepping()) {
+      scroll_event_step();
+    }
   }
 }
 function scroll_event_step() {
@@ -201,7 +201,6 @@ function scroll_event_step() {
       my.resumeScrollLineNum = my.elineIndex + 3;
     }
   }
-
   if (my.currentState == my.state_intro_step) {
     let shortStop = my.elineIndex == my.shortStopLineNum - 1;
     // console.log('scroll_event shortStop', shortStop, my.state_timer.lapse());
