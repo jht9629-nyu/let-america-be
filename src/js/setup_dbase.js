@@ -10,20 +10,21 @@ async function setup_dbase() {
   my.mo_room = my.mo_room || 'm1-america';
   my.mo_group = my.mo_group || 's0';
   my.nameDevice = 'america';
-  if (my.mo_group == 's0') {
-    my.mo_room = 'm0-' + my.mo_room.substring(3);
-  }
   my.appTitle = 'let america be';
-  console.log('setup_dbase my.mo_app', my.mo_app, 'my.mo_room', my.mo_room, 'my.mo_group', my.mo_group);
 
   // set group for all devices to share item values
   let params = get_url_params();
   my.query = params;
   console.log('params', params);
   my.mo_group = params.group || my.mo_group;
+
   if (my.mo_group == 's0') {
-    my.mo_room = 'm0-america';
+    // m0-america
+    my.mo_room = 'm0-' + my.mo_room.substring(3);
   }
+  // console.log(`setup_dbase my.mo_app=${my.mo_app} my.mo_room=${my.mo_room} my.mo_group=${my.mo_group}`);
+  // console.log('setup_dbase my.mo_app', my.mo_app, 'my.mo_room', my.mo_room, 'my.mo_group', my.mo_group);
+
   // src/poem/poem/let-america-be-america-again.html
   my.qrcode_url = function () {
     return `../../qrcode/${my.mo_group}.png?v=30`;
@@ -54,10 +55,8 @@ function report_status_formatter({ version, muid, nvisit, ndevice, uid }) {
 function observe_item() {
   console.log('observe_item ');
   dbase.observe('item', { observed_item });
-
   function observed_item(item) {
     // console.log('observe_item observed_item', item);
-
     dbase.if_action({ item, prop: 'action_full_read', actionFunc: full_read_action });
     dbase.if_action({ item, prop: 'action_rewind', actionFunc: rewind_action });
     dbase.if_action({ item, prop: 'action_next', actionFunc: next_action });

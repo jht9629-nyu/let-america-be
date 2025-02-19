@@ -10,14 +10,13 @@ my.qrCodeWidth = '25%';
 
 my.paraColorIndex = -1;
 my.nextState = 0;
-my.state_play_from_top_short = 'state_play_from_top_short';
 
 my.shortStopLineNum = 5;
 // on iphone window.scrollTo(0, 0) sometimes fails
 // non-zero seems to help make scroll to top consistent
 my.scrollYTopShort = 1;
 my.scrollYTopLong = 1;
-my.scrollPeriod = 0.1;
+// my.scrollPeriod = 0.1;
 
 my.topRunCount = 0;
 my.margin = 32;
@@ -32,7 +31,6 @@ window.addEventListener('mouseup', function (event) {
   console.log('window mouseup event', event);
   console.log('window mouseup event.target', event.target);
   // console.log('mouseup clientX', event.clientX, 'clientY', event.clientY);
-  // let zoomFactor = webFrame_getZoomFactor();
   if (event.target.nodeName !== 'BUTTON') {
     my.scrollEnabled = !my.scrollEnabled;
     console.log('window mouseup window.scrollY', window.scrollY, 'my.scrollEnabled', my.scrollEnabled);
@@ -153,17 +151,16 @@ function setup_main() {
   my.elineIndex = 0;
   {
     // let period = 2.0;
-    let period = 1.75;
+    let period = 1.75; // eline_timer
     my.eline_timer = new PeriodTimer({ period });
   }
   {
-    let period = my.scrollPeriod;
+    let period = 0.1; // scroll_timer
     my.scroll_timer = new PeriodTimer({ period, timer_event: scroll_event });
   }
 
   window.scrollTo(0, my.scrollYTopShort);
 
-  // start_scroll_pause(my.state_play_from_top_short);
   state_init();
 
   send_current_line();
@@ -177,7 +174,7 @@ function scroll_event() {
   if (my.focusEnabled) {
     focus_line();
   } else {
-    check_line_hilite();
+    track_line_hilite();
     if (state_isStepping()) {
       scroll_event_step();
     }
@@ -213,7 +210,7 @@ function scroll_event_step() {
 }
 
 // Keep up last hilite until starting from the top
-function check_line_hilite() {
+function track_line_hilite() {
   // when we are on the last line
   // and it is off the top of screen
   // then stay on the last line
@@ -237,7 +234,7 @@ function check_line_hilite() {
   //   send_current_line();
   // }
   if (!my.eline_timer.check()) {
-    // console.log('check_line_hilite !my.eline_timer.check()', my.eline_timer.lapse());
+    // console.log('track_line_hilite !my.eline_timer.check()', my.eline_timer.lapse());
     return;
   }
   if (!my.hword || my.hword.active) {
@@ -245,7 +242,7 @@ function check_line_hilite() {
     // Waiting for word hilight on current line to finish
     return;
   }
-  // console.log('check_line_hilite my.eline_timer.check() lapse', my.eline_timer.lapse());
+  // console.log('track_line_hilite my.eline_timer.check() lapse', my.eline_timer.lapse());
   // delay new hilite until line is in upper half of window
   let midWindow = window.innerHeight / 2;
   // take off 10 pixels for bottom status area
@@ -255,18 +252,18 @@ function check_line_hilite() {
   // search down for line that's on at mid window point
   my.offscreen = 1;
   if (rt.y < 0) {
-    console.log('check_line_hilite rt.y < 0 find_line_down ---- ', my.elineIndex);
+    console.log('track_line_hilite rt.y < 0 find_line_down ---- ', my.elineIndex);
     find_line_down(rt, midWindow);
   } else if (rt.y > bottomWindow) {
     find_line_up(rt, midWindow);
   } else {
     my.offscreen = 0;
   }
-  let onlast = my.elineIndex == my.elines.length - 1;
   // console.log( 'onlast', onlast,  ' elineIndex',  my.elineIndex, 'state_isStepping', state_isStepping(), 'offscreen', my.offscreen );
   if (state_isStepping()) {
-    if (onlast && state_isStepping() && !my.offscreen) {
-      console.log(' onlast elineIndex', my.elineIndex);
+    let onlast = my.elineIndex == my.elines.length - 1;
+    if (onlast && !my.offscreen) {
+      console.log('state_next_event onlast elineIndex', my.elineIndex);
       state_next_event();
     } else {
       advance_next_line();
@@ -288,12 +285,7 @@ function find_line_down(rt, midWindow) {
   if (index >= my.elines.length) {
     index = my.elines.length - 1;
   }
-  // let onlast = index == my.elines.length - 1;
   set_elineIndex(index);
-  // if (onlast && state_isStepping()) {
-  //   console.log('find_line_down onlast && my.scrollEnabled ---- rt.y', rt.y, 'elineIndex', my.elineIndex);
-  //   state_next_event();
-  // }
 }
 
 // current line is off the bottom of the screen
@@ -305,7 +297,7 @@ function find_line_up(rt, midWindow) {
     rt = clientRect_elineIndex(index).rt;
     index--;
   }
-  // console.log('check_line_hilite while end my.elineIndex', my.elineIndex);
+  // console.log('track_line_hilite while end my.elineIndex', my.elineIndex);
   set_elineIndex(index);
 }
 

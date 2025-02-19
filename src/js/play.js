@@ -1,8 +1,5 @@
 //
 
-// my.currentState
-// my.nextState
-//  my.state_play_from_top_short
 //
 //  state_intro_pause : 3 sec wait
 //  state_intro_step : next line every 2 sec until end of intro
@@ -18,7 +15,7 @@
 //
 
 function state_init() {
-  //
+  // use prop reference to detect typos
   my.state_intro_pause = 'state_intro_pause';
   my.state_intro_step = 'state_intro_step';
   my.state_intro_end_pause = 'state_intro_end_pause';
@@ -30,6 +27,9 @@ function state_init() {
   my.state_timer = new PeriodTimer({ period, timer_event: state_next_event });
   state_next_event(my.state_intro_pause);
 }
+
+// my.currentState
+// my.nextState
 
 function state_next_event(newState) {
   console.log('state_next_event my.nextState', my.nextState, 'my.currentState', my.currentState);
@@ -99,7 +99,6 @@ function state_isStepping() {
 
 function start_intro_pause() {
   clear_word_styles();
-  // play_from_top_short();
   play_from_top(my.scrollYTopShort);
 }
 
@@ -118,33 +117,18 @@ function play_from_top_toggle() {
 
 function play_from_top_short() {
   console.log('play_from_top_short ', state_isFullRead());
-
-  // my.isFullRead = 0;
-
   state_next_event(my.state_intro_pause);
 }
 
 function play_from_top_long() {
   console.log('play_from_top_long ', state_isFullRead());
-
-  // my.isFullRead = 1;
-
   state_next_event(my.state_full_pause);
 }
 
 function play_from_top(ytop) {
-  // gc();
   my.topRunCount++;
-  console.log(
-    'play_from_top my.topRunCount',
-    my.topRunCount,
-    'my.elineIndex',
-    my.elineIndex,
-    'eline_timer lapse',
-    my.eline_timer.lapse(),
-    'state_timer.lapse',
-    my.state_timer.lapse()
-  );
+  console.log('play_from_top my.topRunCount', my.topRunCount, 'my.elineIndex', my.elineIndex);
+  console.log('eline_timer lapse', my.eline_timer.lapse(), 'state_timer.lapse', my.state_timer.lapse());
   console.log('play_from_top my.scrollEnabled', my.scrollEnabled);
   // Jump to very top if first line is not already on screen
   let rt = clientRect_elineIndex(0).rt;
@@ -152,8 +136,6 @@ function play_from_top(ytop) {
     window.scrollTo(0, ytop);
     console.log('ytop', ytop, 'window.scrollY', window.scrollY);
   }
-
-  // start_scroll_pause();
 
   set_elineIndex(0);
 
@@ -176,8 +158,6 @@ function advance_next_line() {
 }
 
 function focus_line() {
-  // let el = my.elines[my.elineIndex];
-  // let rt = el.getBoundingClientRect();
   let { el, rt } = clientRect_elineIndex(my.elineIndex);
   overlay_element(el);
   let midWindow = window.innerHeight / 2;
@@ -217,7 +197,6 @@ function send_current_line() {
 // lineInfo = { num, text, color }
 function send_lineInfo(lineInfo) {
   // console.log('send_lineInfo lineInfo', lineInfo);
-  // ipcRenderer.send('set-line-info', lineInfo);
   dbase_update_line(lineInfo);
 }
 

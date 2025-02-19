@@ -137,10 +137,22 @@ function color_para() {
   if (!state_isFullRead()) return;
   let index = my.elineIndex;
   let { el, rt } = clientRect_elineIndex(index);
-  let parent = el.parentNode;
+  let parent = get_para_node(el);
   if (parent.style.backgroundColor) return;
   my.paraColorIndex++;
   parent.style.backgroundColor = overlay_element_color(my.paraColorIndex);
+}
+
+// find the P node for long-line
+// two lines have <em> in outter
+// "Say, who are you that mumbles in the dark?"
+function get_para_node(el) {
+  let parent = el.parentNode;
+  if (parent.nodeName !== 'P') {
+    // console.log('parent', parent, 'parent.nodeName', parent.nodeName);
+    parent = parent.parentNode;
+  }
+  return parent;
 }
 
 function clear_word_styles() {
@@ -154,7 +166,7 @@ function clear_word_styles() {
       let span = spans[sindex];
       span.style.backgroundColor = '';
     }
-    let parent = el.parentNode;
+    let parent = get_para_node(el);
     parent.style.backgroundColor = '';
   }
 }
