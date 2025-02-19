@@ -263,16 +263,7 @@ function check_line_hilite() {
     my.offscreen = 0;
   }
   let onlast = my.elineIndex == my.elines.length - 1;
-  console.log(
-    'onlast',
-    onlast,
-    ' elineIndex',
-    my.elineIndex,
-    'state_isStepping',
-    state_isStepping(),
-    'offscreen',
-    my.offscreen
-  );
+  // console.log( 'onlast', onlast,  ' elineIndex',  my.elineIndex, 'state_isStepping', state_isStepping(), 'offscreen', my.offscreen );
   if (state_isStepping()) {
     if (onlast && state_isStepping() && !my.offscreen) {
       console.log(' onlast elineIndex', my.elineIndex);
