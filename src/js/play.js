@@ -65,10 +65,14 @@ function state_next_event(newState) {
       break;
     case my.state_full_end_pause:
       period = 3.0;
-      nextState = my.state_intro_pause;
+      if (my.isRemote) {
+        nextState = my.state_full_pause;
+      } else {
+        nextState = my.state_intro_pause;
+      }
       break;
   }
-  my.currentState = my.nextState;
+  my.currentState = newState;
   my.nextState = nextState;
   my.state_timer.period = period;
   my.state_timer.restart();
@@ -210,7 +214,7 @@ function send_current_line() {
   }
 }
 
-// lineInfo = { num, text }
+// lineInfo = { num, text, color }
 function send_lineInfo(lineInfo) {
   // console.log('send_lineInfo lineInfo', lineInfo);
   // ipcRenderer.send('set-line-info', lineInfo);
