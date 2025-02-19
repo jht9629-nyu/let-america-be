@@ -34,6 +34,7 @@ function state_init() {
 function state_next_event(newState) {
   console.log('state_next_event my.nextState', my.nextState, 'my.currentState', my.currentState);
   console.log('state_next_event lapse', my.state_timer.lapse());
+  console.log('state_next_event newState', newState);
   if (newState) {
     my.nextState = newState;
   }

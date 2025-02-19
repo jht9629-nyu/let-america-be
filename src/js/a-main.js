@@ -3,7 +3,7 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=33';
+my.version = '?v=34';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -232,10 +232,10 @@ function check_line_hilite() {
   let { el, rt } = clientRect_elineIndex(my.elineIndex);
   overlay_element(el);
   // when on last line, keep client updated
-  if (my.elineIndex == my.last_elineIndex) {
-    console.log('my.elineIndex == my.last_elineIndex send_current_line');
-    send_current_line();
-  }
+  // if (my.elineIndex == my.last_elineIndex) {
+  //   console.log('my.elineIndex == my.last_elineIndex send_current_line');
+  //   send_current_line();
+  // }
   if (!my.eline_timer.check()) {
     // console.log('check_line_hilite !my.eline_timer.check()', my.eline_timer.lapse());
     return;
