@@ -3,7 +3,7 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=31';
+my.version = '?v=32';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -262,8 +262,24 @@ function check_line_hilite() {
   } else {
     my.offscreen = 0;
   }
+  let onlast = my.elineIndex == my.elines.length - 1;
+  console.log(
+    'onlast',
+    onlast,
+    ' elineIndex',
+    my.elineIndex,
+    'state_isStepping',
+    state_isStepping(),
+    'offscreen',
+    my.offscreen
+  );
   if (state_isStepping()) {
-    advance_next_line();
+    if (onlast && state_isStepping() && !my.offscreen) {
+      console.log(' onlast elineIndex', my.elineIndex);
+      state_next_event();
+    } else {
+      advance_next_line();
+    }
   }
 }
 
@@ -281,12 +297,12 @@ function find_line_down(rt, midWindow) {
   if (index >= my.elines.length) {
     index = my.elines.length - 1;
   }
-  let onlast = index == my.elines.length - 1;
+  // let onlast = index == my.elines.length - 1;
   set_elineIndex(index);
-  if (onlast && state_isStepping()) {
-    console.log('find_line_down onlast && my.scrollEnabled ---- rt.y', rt.y, 'elineIndex', my.elineIndex);
-    state_next_event();
-  }
+  // if (onlast && state_isStepping()) {
+  //   console.log('find_line_down onlast && my.scrollEnabled ---- rt.y', rt.y, 'elineIndex', my.elineIndex);
+  //   state_next_event();
+  // }
 }
 
 // current line is off the bottom of the screen

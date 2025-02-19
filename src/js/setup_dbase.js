@@ -4,8 +4,8 @@ let dbase;
 
 async function setup_dbase() {
   // console.log('setup_dbase Enter ');
-  my.fireb_config = 'jht9629';
-  // my.fireb_config = 'jhtitp';
+  // my.fireb_config = 'jht9629';
+  my.fireb_config = 'jhtitp';
   my.mo_app = my.mo_app || 'mo-america-be';
   my.mo_room = my.mo_room || 'm1-america';
   my.mo_group = my.mo_group || 's0';
