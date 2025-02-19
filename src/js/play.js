@@ -150,7 +150,7 @@ function play_from_top(ytop) {
 }
 
 function set_elineIndex(index) {
-  my.last_elineIndex = index;
+  my.last_elineIndex = my.elineIndex;
   my.elineIndex = index;
 }
 
@@ -188,7 +188,7 @@ function delta_next_line(delta) {
 }
 
 function send_current_line() {
-  // console.log('send_current_line');
+  console.log('send_current_line my.elineIndex', my.elineIndex);
   if (!my.elines) return;
   let eln = my.elines[my.elineIndex];
   let num = my.elineIndex + 1;

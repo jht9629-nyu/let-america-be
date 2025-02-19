@@ -3,7 +3,7 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=30';
+my.version = '?v=31';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -233,6 +233,7 @@ function check_line_hilite() {
   overlay_element(el);
   // when on last line, keep client updated
   if (my.elineIndex == my.last_elineIndex) {
+    console.log('my.elineIndex == my.last_elineIndex send_current_line');
     send_current_line();
   }
   if (!my.eline_timer.check()) {
