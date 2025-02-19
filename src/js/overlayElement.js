@@ -125,7 +125,7 @@ function start_hilite_by_word(lineIndex) {
     }
     let span = spans[index];
     let colorIndex = my.hword.colorIndex;
-    if (my.isFullRead) {
+    if (state_isFullRead()) {
       span.style.backgroundColor = overlay_element_color(colorIndex);
     }
     my.hword.wordIndex = index + 1;
@@ -134,7 +134,7 @@ function start_hilite_by_word(lineIndex) {
 }
 
 function color_para() {
-  if (!my.isFullRead) return;
+  if (!state_isFullRead()) return;
   let index = my.elineIndex;
   let { el, rt } = clientRect_elineIndex(index);
   let parent = el.parentNode;

@@ -35,12 +35,12 @@ function state_next_event(newState) {
   console.log('state_next_event my.nextState', my.nextState, 'my.currentState', my.currentState);
   console.log('state_next_event lapse', my.state_timer.lapse());
   console.log('state_next_event newState', newState);
-  if (newState) {
-    my.nextState = newState;
+  if (!newState) {
+    newState = my.nextState;
   }
-  let nextState = my.nextState;
+  let nextState = newState;
   let period;
-  switch (my.nextState) {
+  switch (newState) {
     case my.state_intro_pause:
       period = 3.0;
       start_intro_pause();
@@ -74,6 +74,16 @@ function state_next_event(newState) {
   my.state_timer.restart();
 }
 
+function state_isFullRead() {
+  switch (my.currentState) {
+    case my.state_full_pause:
+    case my.state_full_step:
+    case my.state_full_end_pause:
+      return true;
+  }
+  return false;
+}
+
 function state_isStepping() {
   switch (my.currentState) {
     case my.state_intro_step:
@@ -95,7 +105,7 @@ function start_full_pause() {
 }
 
 function play_from_top_toggle() {
-  if (my.isFullRead) {
+  if (state_isFullRead()) {
     play_from_top_short();
   } else {
     play_from_top_long();
@@ -103,17 +113,17 @@ function play_from_top_toggle() {
 }
 
 function play_from_top_short() {
-  console.log('play_from_top_short ', my.isFullRead);
+  console.log('play_from_top_short ', state_isFullRead());
 
-  my.isFullRead = 0;
+  // my.isFullRead = 0;
 
   state_next_event(my.state_intro_pause);
 }
 
 function play_from_top_long() {
-  console.log('play_from_top_long ', my.isFullRead);
+  console.log('play_from_top_long ', state_isFullRead());
 
-  my.isFullRead = 1;
+  // my.isFullRead = 1;
 
   state_next_event(my.state_full_pause);
 }
