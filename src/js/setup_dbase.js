@@ -34,8 +34,21 @@ async function setup_dbase() {
   };
   my.qrCodeClickAction = qrcode_click_action;
 
+  my.isRemote = !my.showQRCode();
+
+  my.report_status_formatter = report_status_formatter;
+
   dbase = await mo_dbase_init(my);
+
   observe_item();
+
+  if (my.isRemote) {
+    issue_action_full_read();
+  }
+}
+
+function report_status_formatter({ version, muid, nvisit, ndevice, uid }) {
+  return `${my.mo_group} ${version} ${muid} (ndevice=${ndevice}) (nvisit=${nvisit})`;
 }
 
 function observe_item() {
@@ -54,6 +67,7 @@ function observe_item() {
 }
 
 function issue_action_full_read() {
+  console.log('issue_action_full_read');
   dbase.issue_action('item', 'action_full_read');
 }
 

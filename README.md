@@ -1,5 +1,5 @@
 # [let-america-be](https://github.com/jht9629-nyu/let-america-be.git)
 
-- [enter](https://jht9629-nyu.github.io/let-america-be/src/index.html?v=32)
+- [enter](https://jht9629-nyu.github.io/let-america-be/src/index.html?v=33)
 
-## ?v=32
+## ?v=33
