@@ -1,44 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>let-american-be</title>
+    <title>let-american-be ?v=37</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
     <div>
-      <h1 id="id_title">Welcome to let-american-be ?v=36</h1>
+      <h1 id="id_title">Welcome to let-american-be</h1>
       By entering this site you agree to have anonymous web data stored <br />
       <h1>
-        <a href="../poem/poem/let-america-be-america-again.html?" id="id_link">
-          <!-- -->
+        <a href="../poem/poem/let-america-be-america-again.html" style="display: none" id="id_link">
           Enter let-american-be
         </a>
+        <button id="id_button_enter">Enter let-american-be</button>
       </h1>
       <h2>Enter to control of the poem on the big screen!</h2>
+    </div>
+    <div>
+      <input id="id_name" type="text" class="textInput" placeholder="your name" style="width: 40%" />
+      <button id="id_button_add">Add</button>
+      <button id="id_button_remove">Remove</button>
+      <!-- <button id="id_button_remove" style="font-size: 4vw">Remove</button> -->
       <br />
-      <!-- powered by <a href="https://molab-itp.github.io/moSalon/" target="moSalon"> moSalon</a> -->
+      <input id="id_comment" type="text" class="textInput" placeholder="comment" />
+      <ol id="id_comments_ol"></ol>
+    </div>
+    <div id="id_footer" class="fixed-footer">
       created by <a href="https://jht1493.net" target="jht">John Henry Thompson</a> <br />
       source on <a href="https://github.com/jht9629-nyu/let-america-be" target="github"> github.com </a> <br />
       powered by <a href="https://github.com/molab-itp/moLib" target="moLib"> moLib</a> <br />
     </div>
-
     <script>
-      // let my_version = '?v=28';
       let str = window.location.search;
       if (str) {
-        str = '&' + str.substring(1);
+        // str = '&' + str.substring(1);
+        id_link.href += str;
+        id_title.innerHTML = id_title.innerHTML + ' ' + str;
       } else {
         str = '';
       }
-      id_link.href += str;
-      id_title.innerHTML = id_title.innerHTML + str;
-      // id_link.innerHTML += ' ' + str;
-      // window.location = id_link.href;
-
-      // https://jht9629-nyu.github.io/let-america-be/src/qrcode/?group=s0
-      // https://jht9629-nyu.github.io/let-america-be/src/qrcode/?group=s1
-      //
     </script>
   </body>
+  <script type="module" src="https://unpkg.com/itp-molib@0.2.36/dist/moLib.esm.js"></script>
+  <script src="../js/a-mo_my_setup.js?v=37"></script>
+  <script src="../js/enter_main.js?v=37"></script>
+  <script src="../js/enter_setup_dbase.js?v=37"></script>
 </html>

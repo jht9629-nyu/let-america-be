@@ -1,0 +1,39 @@
+/* body, */
+h1,
+button {
+  font-size: 5vw;
+}
+.fixed-footer {
+  font-size: 12px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  /* :background-color #333;
+        color: white; */
+  /* background-color: black;
+  color: white; */
+  padding: 16px 2px;
+  text-align: left;
+  z-index: 1000;
+}
+
+#id_comments_ol {
+  font-size: 2vw;
+  background-color: black;
+  color: white;
+}
+
+.float_right {
+  float: right;
+  margin-right: 5px;
+}
+
+.textInput {
+  width: 95%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}

@@ -3,7 +3,6 @@
 let my = {};
 window.my = my;
 
-my.version = '?v=36';
 my.lineHeight = 28;
 my.footerHeight = '192px';
 my.qrCodeWidth = '25%';
@@ -52,7 +51,7 @@ function setup_main() {
       'mouseup',
       function (event) {
         event.preventDefault();
-        console.log('Comment mouseup  ');
+        goto_comment_page();
       },
       { capture: true }
     );
@@ -164,6 +163,17 @@ function setup_main() {
   state_init();
 
   send_current_line();
+}
+
+function goto_comment_page() {
+  let str = window.location.search;
+  if (str) {
+    // str = '&' + str.substring(1);
+  } else {
+    str = '';
+  }
+  console.log('goto_comment_page str', str);
+  window.location.href = '../../qrcode/index.html' + str;
 }
 
 function scroll_event() {

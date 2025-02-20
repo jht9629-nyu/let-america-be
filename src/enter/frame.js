@@ -1,7 +1,7 @@
 //
 
 // code that runs every frame
-// ptjs function setup semantics
+// p5js function setup semantics
 
 function setup_animationFrame() {
   window.requestAnimationFrame(animationFrame_callback);
@@ -16,18 +16,6 @@ function animationFrame_callback(timeStamp) {
     my.comment_update_pending = 0;
     show_comments();
   }
-  // if (my.blackfacts_player_inited) {
-  //   record_startup_time(timeSecs);
-  // }
-  // if (my.animLoop) {
-  //   my.animLoop.step({ action: stepAction, loop: my.playClip });
-  //   let lapse = '';
-  //   if (my.playClip) lapse = my.animLoop.lapse() + ' ' + my.stepCount;
-  //   id_lapse_report.innerHTML = lapse;
-  // }
-  // if (my.pingLoop) {
-  //   my.pingLoop.step({ loop: 1 });
-  // }
 }
 
 function record_startup_time(timeSecs) {

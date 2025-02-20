@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>let-american-be</title>
+  </head>
+  <body>
+    <div>
+      <h1 id="id_title">Welcome to let-american-be ?v=36</h1>
+      By entering this site you agree to have anonymous web data stored <br />
+      <h1>
+        <a href="../poem/poem/let-america-be-america-again.html?" id="id_link">
+          <!-- -->
+          Enter let-american-be
+        </a>
+      </h1>
+      <h2>Enter to control of the poem on the big screen!</h2>
+      <br />
+      <!-- powered by <a href="https://molab-itp.github.io/moSalon/" target="moSalon"> moSalon</a> -->
+      created by <a href="https://jht1493.net" target="jht">John Henry Thompson</a> <br />
+      source on <a href="https://github.com/jht9629-nyu/let-america-be" target="github"> github.com </a> <br />
+      powered by <a href="https://github.com/molab-itp/moLib" target="moLib"> moLib</a> <br />
+    </div>
+
+    <script>
+      // let my_version = '?v=28';
+      let str = window.location.search;
+      if (str) {
+        str = '&' + str.substring(1);
+      } else {
+        str = '';
+      }
+      id_link.href += str;
+      id_title.innerHTML = id_title.innerHTML + str;
+      // id_link.innerHTML += ' ' + str;
+      // window.location = id_link.href;
+
+      // https://jht9629-nyu.github.io/let-america-be/src/qrcode/?group=s0
+      // https://jht9629-nyu.github.io/let-america-be/src/qrcode/?group=s1
+      //
+    </script>
+  </body>
+</html>
