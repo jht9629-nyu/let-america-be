@@ -1,7 +1,7 @@
 //
 
 function mo_my_setup() {
-  my.version = '?v=37';
+  my.version = '?v=38';
   // console.log('setup_dbase Enter ');
   // my.fireb_config = 'jht9629';
   my.fireb_config = 'jhtitp';
