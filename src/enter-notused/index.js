@@ -36,7 +36,7 @@ function show_comments() {
     items.push(`<li>${entry.name}: ${entry.comment}</li>`);
   }
   items.reverse();
-  id_comments_ol.innerHTML = items.join('');
+  id_comments_ul.innerHTML = items.join('');
 }
 
 function add_click_action() {

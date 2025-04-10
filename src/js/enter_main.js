@@ -42,12 +42,14 @@ function remove_click_action(event) {
 
 function show_comments() {
   let items = [];
+  let num = 1;
   for (let prop in my.comment_store) {
     let entry = my.comment_store[prop];
-    items.push(`<li>${entry.name}: ${entry.comment}</li>`);
+    items.push(`<li>${num} ${entry.name}: ${entry.comment}</li>`);
+    num++;
   }
   items.reverse();
-  id_comments_ol.innerHTML = items.join('');
+  id_comments_ul.innerHTML = items.join('');
 }
 
 function add_click_action(event) {

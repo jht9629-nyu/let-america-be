@@ -18,7 +18,7 @@ button {
   z-index: 1000;
 }
 
-#id_comments_ol {
+#id_comments_ul {
   font-size: 4vw;
   background-color: black;
   color: white;
